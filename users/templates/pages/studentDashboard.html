@@ -1,0 +1,177 @@
+{% load static %}
+{% include "header.html" %}
+<body>
+  <script src="{% static 'js/initTheme.js' %}"></script>
+  <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+    <div class="page-heading">
+      <h3>Student Dashboard</h3>
+    </div>
+    <div class="page-content">
+      <section class="row">
+        <div class="col-12 col-lg-9">
+          <div class="row">
+            <!-- Total Posts -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon purple mb-2">
+                        <i class="iconly-boldDocument"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">Total Post</h6>
+                      <h6 class="font-extrabold mb-0">12</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Approved Posts -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon green mb-2">
+                        <i class="iconly-boldTick-Square"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">Approved Post</h6>
+                      <h6 class="font-extrabold mb-0">9</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Claims Submitted -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon blue mb-2">
+                        <i class="iconly-boldPaper-Plus"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">Claim Item</h6>
+                      <h6 class="font-extrabold mb-0">3</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Issues Reported -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon red mb-2">
+                        <i class="iconly-boldMessage"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">Issue Reported</h6>
+                      <h6 class="font-extrabold mb-0">5</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- You can use this chart for post activity -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Post Activity Overview</h4>
+                </div>
+                <div class="card-body">
+                  <div id="chart-post-activity"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right side info -->
+        <div class="col-12 col-lg-3">
+          <!-- Profile Info -->
+          <div class="card">
+            <div class="card-body py-4 px-4">
+              <div class="d-flex align-items-center">
+                <div class="avatar avatar-xl">
+                  <img src="{% static '/compiled/jpg/1.jpg' %}" alt="Student Image" />
+                </div>
+                <div class="ms-3 name">
+                  <h5 class="font-bold">Student Name</h5>
+                  <h6 class="text-muted mb-0">@studentid</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Claims -->
+          <div class="card">
+            <div class="card-header">
+              <h4>Recent Claims</h4>
+            </div>
+            <div class="card-content pb-4">
+              <div class="recent-message d-flex px-4 py-3">
+                <div class="name ms-1">
+                  <h5 class="mb-1">USB Drive</h5>
+                  <h6 class="text-muted mb-0">Pending</h6>
+                </div>
+              </div>
+              <div class="recent-message d-flex px-4 py-3">
+                <div class="name ms-1">
+                  <h5 class="mb-1">Backpack</h5>
+                  <h6 class="text-muted mb-0">Approved</h6>
+                </div>
+              </div>
+              <div class="px-4">
+                <button
+                  class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
+                >
+                  View All Claims
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Issue Report Chart Placeholder -->
+          <div class="card">
+            <div class="card-header">
+              <h4>Issue Reports</h4>
+            </div>
+            <div class="card-body">
+              <div id="chart-issue-status"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+{% include "footer.html" %}

@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from .models import Student  # Import the Student model
+from .models import Student 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 def home(request):
@@ -55,14 +57,21 @@ def loginCheck(request):
         student_id = request.POST.get('student_id')
         password = request.POST.get('password')
         
-        try:
-            student = Student.objects.get(student_id=student_id)
-            if student.check_password(password):
-                # Login successful, redirect to home or dashboard
-                return redirect('home')
-            else:
-                messages.add_message(request, messages.ERROR, 'Invalid Student ID or password')
-        except Student.DoesNotExist:
-            messages.add_message(request, messages.ERROR, 'Student ID does not exist')
+        # Use Django's authenticate to verify the user
+        user = authenticate(request, username=student_id, password=password)
+        
+        if user is not None:
+            # If authentication is successful, log the user in
+            login(request, user)
+            return redirect('student_dashboard')
+        else:
+            # If authenticate returns None, the credentials were wrong
+            messages.add_message(request, messages.ERROR, 'Invalid Student ID or password')
+            return redirect('loginCheck') # Redirect back to the login form
 
     return render(request, 'login/login.html', {})
+
+@login_required(login_url='loginCheck')
+def student_dashboard(request):
+    student = request.user
+    return render(request, 'pages/studentDashboard.html', {'student': student})
