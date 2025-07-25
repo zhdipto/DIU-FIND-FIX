@@ -117,21 +117,21 @@
 
               </li>
 
-              <li class="sidebar-item has-sub">
+              <li class="sidebar-item has-sub {{ classActiveReports }}">
                 <a href="#" class="sidebar-link">
                   <i class="bi bi-grid-1x2-fill"></i>
                   <span>Reports / Complaints</span>
                 </a>
 
-                <ul class="submenu">
-                  <li class="submenu-item">
-                    <a href="viewAllReport.html" class="submenu-link"
+                <ul class="submenu {{ classActiveReports }}">
+                  <li class="submenu-item {{ classActiveViewAllReports }}">
+                    <a href="{% url 'view_all_reports' %}" class="submenu-link"
                       >View All Reports</a
                     >
                   </li>
 
-                  <li class="submenu-item">
-                    <a href="submitReport.html" class="submenu-link"
+                  <li class="submenu-item {{ classActiveSubmitReport }}">
+                    <a href="{% url 'submit_report' %}" class="submenu-link"
                       >Submit Report</a
                     >
                   </li>

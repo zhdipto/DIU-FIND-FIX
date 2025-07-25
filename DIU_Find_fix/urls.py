@@ -22,4 +22,5 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', include('users.urls')),
     path('lostfound/', include('lostfound.urls')),
+    path('reports/', include('reports.urls')),
 ]
