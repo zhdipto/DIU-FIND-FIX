@@ -19,3 +19,11 @@ def viewLostItem(request):
         "classActiveViewLostItem": "active",
     }
     return render(request, 'lostItem/viewLostItem.html', context)
+
+@login_required(login_url='loginCheck')
+def createPost(request):
+    # This view will render the create post page
+    context = {
+        "classActiveCreatePost": "active",
+    }
+    return render(request, 'post/createPost.html', context)

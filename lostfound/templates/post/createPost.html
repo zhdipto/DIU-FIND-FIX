@@ -1,0 +1,227 @@
+{% load static %}
+{% include "header.html" %}
+<body>
+    <script src="{% static 'js/initTheme.js' %}"></script>
+    <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last"></div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  class="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Lost Items
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section class="section">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Post Lost or Found Item</h4>
+                <p class="text-subtitle text-muted">
+                  Please fill in all fields to report a lost or found item.
+                </p>
+              </div>
+              <div class="card-body">
+                <form id="lostFoundForm">
+                  <div class="row">
+                    <!-- Post Type -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="postType"
+                          >Post Type <span class="text-danger">*</span></label
+                        >
+                        <select
+                          id="postType"
+                          name="postType"
+                          class="form-select"
+                          required
+                        >
+                          <option value="">Select Type</option>
+                          <option value="lost">Lost Item</option>
+                          <option value="found">Found Item</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Item Name -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="itemName"
+                          >Item Name <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="text"
+                          id="itemName"
+                          name="itemName"
+                          class="form-control"
+                          placeholder="e.g., Wallet, Phone"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Student ID -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="studentId"
+                          >Student ID <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="text"
+                          id="studentId"
+                          name="studentId"
+                          class="form-control"
+                          placeholder="e.g., STU-2024001"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Location -->
+                    <!-- Location -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="location"
+                          >Location <span class="text-danger">*</span></label
+                        >
+                        <select
+                          id="location"
+                          class="form-select"
+                          name="location"
+                          required
+                        >
+                          <option value="">Select Location</option>
+                          <option value="library">Library</option>
+                          <option value="cafeteria">Cafeteria</option>
+                          <option value="classroom-a">Classroom Block A</option>
+                          <option value="classroom-b">Classroom Block B</option>
+                          <option value="classroom-c">Classroom Block C</option>
+                          <option value="laboratory">Laboratory</option>
+                          <option value="gymnasium">Gymnasium</option>
+                          <option value="dormitory">Dormitory</option>
+                          <option value="parking">Parking Area</option>
+                          <option value="admin-office">
+                            Administrative Office
+                          </option>
+                          <option value="auditorium">Auditorium</option>
+                          <option value="other">Other</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Date -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="date"
+                          >Date <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="date"
+                          id="date"
+                          name="date"
+                          class="form-control"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Time -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="time"
+                          >Time <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="time"
+                          id="time"
+                          name="time"
+                          class="form-control"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="form-group">
+                    <label for="description"
+                      >Description <span class="text-danger">*</span></label
+                    >
+                    <textarea
+                      id="description"
+                      name="description"
+                      rows="4"
+                      class="form-control"
+                      placeholder="Provide details about the item and circumstances..."
+                      required
+                    ></textarea>
+                  </div>
+
+                  <!-- Photo Upload -->
+                   <div class="form-group">
+                    <label for="photo">Item Photo</label>
+                    <input
+                      type="file"
+                      id="photo"
+                      class="form-control"
+                      name="photo"
+                      accept="image/*"
+                      required
+                    />
+                    <small class="text-muted"
+                      >Accepted formats: PNG, JPG, GIF (Max size: 5MB)</small
+                    >
+                    <div class="mt-2">
+                      <img
+                        id="photoPreview"
+                        style="
+                          max-width: 200px;
+                          max-height: 200px;
+                          display: none;
+                        "
+                        class="img-thumbnail"
+                      />
+                    </div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+
+                  <!-- Submit Buttons -->
+                  <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-send"></i> Submit Post
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                      <i class="bi bi-arrow-clockwise"></i> Reset Form
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </div>
+
+{% include "footer.html" %}
