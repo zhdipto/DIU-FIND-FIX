@@ -8,5 +8,5 @@ urlpatterns = [
     # path('registration/', views.registration, name='registration'),
     path('register/', views.register, name='register'),
     path('loginCheck/', views.loginCheck, name='loginCheck'),
-    path('student_dashboard/', views.student_dashboard, name='student_dashboard'),
+    path('student-dashboard/', views.student_dashboard, name='student_dashboard'),
 ]

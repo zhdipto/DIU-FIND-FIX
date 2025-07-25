@@ -1,0 +1,30 @@
+.item-image {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.status-claimed {
+  background-color: #28a745;
+  color: white;
+}
+.status-unclaimed {
+  background-color: #dc3545;
+  color: white;
+}
+.description-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.action-btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  margin: 2px;
+}

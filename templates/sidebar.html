@@ -80,28 +80,28 @@
             <ul class="menu">
               <li class="sidebar-title">Menu</li>
 
-              <li class="sidebar-item active">
-                <a href="index.html" class="sidebar-link">
+              <li class="sidebar-item {{ classActiveDashboard }}">
+                <a href="{% url 'student_dashboard' %}" class="sidebar-link">
                   <i class="bi bi-grid-fill"></i>
                   <span>Dashboard</span>
                 </a>
               </li>
 
-              <li class="sidebar-item has-sub">
+              <li class="sidebar-item has-sub {{ classActiveViewAllItem}}">
                 <a href="#" class="sidebar-link">
                   <i class="bi bi-stack"></i>
                   <span>View All Items</span>
                 </a>
 
-                <ul class="submenu">
-                  <li class="submenu-item">
-                    <a href="viewAllLostItem.html" class="submenu-link"
+                <ul class="submenu {{ classActiveViewAllItem }}">
+                  <li class="submenu-item {{ classActiveViewLostItem }}">
+                    <a href="{% url 'view_lost_item' %}" class="submenu-link"
                       >Lost Items</a
                     >
                   </li>
 
-                  <li class="submenu-item">
-                    <a href="component-alert.html" class="submenu-link"
+                  <li class="submenu-item {{ classActiveViewFoundItem }}">
+                    <a href="{% url 'view_found_item' %}" class="submenu-link"
                       >Found Items</a
                     >
                   </li>

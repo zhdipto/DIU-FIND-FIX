@@ -74,4 +74,8 @@ def loginCheck(request):
 @login_required(login_url='loginCheck')
 def student_dashboard(request):
     student = request.user
-    return render(request, 'pages/studentDashboard.html', {'student': student})
+    context = {
+        "student": student,
+        "classActiveDashboard": "active",
+    }
+    return render(request, 'pages/studentDashboard.html', context)
