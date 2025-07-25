@@ -140,16 +140,16 @@
 
               <li class="sidebar-title">Accounts</li>
 
-              <li class="sidebar-item">
-                <a href="form-layout.html" class="sidebar-link">
-                  <i class="bi bi-file-earmark-medical-fill"></i>
+              <li class="sidebar-item {{ classActiveAccount }}">
+                <a href="{% url 'student_profile' %}" class="sidebar-link">
+                  <i class="bi bi-person-circle"></i>
                   <span>Profile</span>
                 </a>
               </li>
 
               <li class="sidebar-item">
                 <a href="table.html" class="sidebar-link">
-                  <i class="bi bi-grid-1x2-fill"></i>
+                  <i class="bi bi-box-arrow-right"></i>
                   <span>Logout</span>
                 </a>
               </li>

@@ -79,3 +79,11 @@ def student_dashboard(request):
         "classActiveDashboard": "active",
     }
     return render(request, 'pages/studentDashboard.html', context)
+@login_required(login_url='loginCheck')
+def student_profile(request):
+    student = request.user
+    context = {
+        "student": student,
+        "classActiveAccount": "active",
+    }
+    return render(request, 'accounts/studentProfile.html', context)
