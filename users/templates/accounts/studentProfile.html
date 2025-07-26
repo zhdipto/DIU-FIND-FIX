@@ -39,9 +39,16 @@
           <div class="card-body">
             <div class="d-flex justify-content-center align-items-center flex-column">
               <div class="avatar avatar-2xl">
-                <img src="{% static 'images/faces/2.jpg' %}" alt="Avatar" />
+                <img
+                    src="{% if student.profile_photo %}
+                            {{ student.profile_photo.url }}
+                        {% else %}
+                            {% static 'compiled/jpg/2.jpg' %}
+                        {% endif %}"
+                    alt="Avatar"
+                    class="profile-image" />
               </div>
-              <h3 class="mt-3">{{ user.student_name }}</h3>
+              <h3 class="mt-3">{{ student.student_name }}</h3>
               <p class="text-small">Student</p>
             </div>
           </div>
@@ -53,7 +60,7 @@
               <!-- Edit Button -->
             <div class="d-flex align-items-center mb-2">
               <div class="form-check form-switch m-0">
-                <input class="form-check-input" type="checkbox" id="editPhotoSwitch">
+                <input class="form-check-input" type="checkbox" id="editProfileSwitch">
               </div>
               <span class="ms-2"><strong>Enable to edit profile</strong></span>
             </div>
@@ -61,7 +68,7 @@
 
 
               <!-- Hidden Upload Form -->
-              <form method="post" enctype="multipart/form-data" id="photoUploadForm" style="display: none; width: 100%;">
+              <form method="post" enctype="multipart/form-data" id="photoUploadForm" style="display: none; width: 100%;" action="{% url 'student_profile_edit' %}">
                 {% csrf_token %}
                 <div class="form-group mt-3 w-100">
                   <label for="profilePhoto">Upload New Photo</label>
@@ -75,45 +82,67 @@
           </div>
         </div>
 
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+
       </div>
       
 
       <div class="col-12 col-lg-8">
         <div class="card">
           <div class="card-body">
-            <form method="post" action="">
+            <form method="post" action="{% url 'student_profile_edit' %}" id="profileForm" class="needs-validation" novalidate>
               {% csrf_token %}
               <div class="form-group">
                 <label for="student_name" class="form-label">Full Name</label>
-                <input type="text" name="student_name" id="student_name" class="form-control" value="{{ user.student_name }}" required />
+                <input type="text" name="student_name" id="student_name" class="form-control" value="{{ student.student_name }}" required disabled/>
               </div>
 
               <div class="form-group">
                 <label for="student_id" class="form-label">Student ID</label>
-                <input type="text" name="student_id" id="student_id" class="form-control" value="{{ user.student_id }}" required readonly />
+                <input type="text" name="student_id" id="student_id" class="form-control" value="{{ student.student_id }}" required disabled/>
               </div>
 
               <div class="form-group">
                 <label for="email" class="form-label">DIU Gmail</label>
-                <input type="email" name="email" id="email" class="form-control" value="{{ user.email }}" required readonly />
+                <input type="email" name="email" id="email" class="form-control" value="{{ student.email }}" required disabled />
               </div>
 
               <div class="form-group">
                 <label for="phone" class="form-label">Phone Number</label>
-                <input type="text" name="phone_number" id="phone" class="form-control" value="{{ user.phone_number }}" required />
+                <input type="text" name="phone_number" id="phone" class="form-control" value="{{ student.phone_number }}" required disabled />
+              </div>
+
+              <div class="form-group">
+                        <label for="birthDate""
+                          >Date of Birth</label
+                        >
+                        <input
+                          type="date"
+                          id="birthDate"
+                          class="form-control"
+                          name="birth_date"
+                          value="{{ student.birth_date|date:'Y-m-d' }}"
+                          disabled
+                        />
               </div>
 
               <div class="form-group">
                 <label for="gender" class="form-label">Gender</label>
-                <select name="gender" id="gender" class="form-control" required>
-                  <option value="male" {% if user.gender == 'male' %}selected{% endif %}>Male</option>
-                  <option value="female" {% if user.gender == 'female' %}selected{% endif %}>Female</option>
+                <select name="gender" id="gender" class="form-control" required disabled>
+                  <option value="male" {% if student.gender == 'male' %}selected{% endif %}>Male</option>
+                  <option value="female" {% if student.gender == 'female' %}selected{% endif %}>Female</option>
                 </select>
               </div>
 
               <div class="form-group">
                 <label for="password" class="form-label">New Password (leave blank to keep current)</label>
-                <input type="password" name="password" id="password" class="form-control" placeholder="Enter new password" />
+                <input type="password" name="password" id="password" class="form-control" placeholder="Enter new password" disabled />
               </div>
 
               {% comment %} <div class="form-group mt-3">
@@ -128,13 +157,30 @@
 </div>
 
 
-      {% include "footer.html" %}
+ {% include "footer.html" %}
 
 <!-- JavaScript to toggle form -->
 <script>
-  document.getElementById("editPhotoSwitch").addEventListener("change", function () {
-    const form = document.getElementById("photoUploadForm");
-    form.style.display = this.checked ? "block" : "none";
-  });
+  document.getElementById("editProfileSwitch").addEventListener("change", function () {
+    const form1 = document.getElementById("photoUploadForm");
+    const form2 = document.getElementById("profileForm");
+    
+    if (this.checked) {
+        // Switch is ON - enable editing
+        form1.style.display = "block";
+        form2.querySelectorAll("input, select").forEach(input => {
+          if (input.name !== 'email' && input.name !== 'student_id') {
+            input.disabled = false;
+          }
+        });
+    } else {
+        // Switch is OFF - disable editing
+        form1.style.display = "none";
+        form2.querySelectorAll("input, select").forEach(input => {
+            input.disabled = true;
+        });
+    }
+});
+
 </script>
 

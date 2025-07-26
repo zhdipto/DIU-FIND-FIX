@@ -7,6 +7,7 @@ class Student(AbstractUser):
     phone_number = models.CharField(max_length=15, blank=True)
     birth_date = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True)
+    profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
 
     class Meta:
         db_table = 'students'
