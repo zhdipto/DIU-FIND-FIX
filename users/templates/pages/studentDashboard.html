@@ -120,19 +120,21 @@
         <!-- Right side info -->
         <div class="col-12 col-lg-3">
           <!-- Profile Info -->
-          <div class="card">
-            <div class="card-body py-4 px-4">
-              <div class="d-flex align-items-center">
-                <div class="avatar avatar-xl">
-                  <img src="{% static '/compiled/jpg/1.jpg' %}" alt="Student Image" />
-                </div>
-                <div class="ms-3 name">
-                  <h5 class="font-bold">Student Name</h5>
-                  <h6 class="text-muted mb-0">@studentid</h6>
+          <a href="{% url 'student_profile' %}" class="card-link">
+            <div class="card">
+              <div class="card-body py-4 px-4">
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-xl">
+                    <img src="{% static '/compiled/jpg/1.jpg' %}" alt="Student Image" />
+                  </div>
+                  <div class="ms-3 name">
+                    <h5 class="font-bold">{{ user.student_name }}</h5>
+                    <h6 class="text-muted mb-0">{{ user.student_id }}</h6>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </a>
 
           <!-- Recent Claims -->
           <div class="card">

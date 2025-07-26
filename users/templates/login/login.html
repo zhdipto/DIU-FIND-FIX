@@ -37,7 +37,7 @@
               Log in with your Student ID and Password.
             </p>
 
-            <form action="{% url 'loginCheck' %}" method="post">
+            <form action="{% url 'login' %}" method="post">
               {% csrf_token %} {% if messages %} {% for message in messages %}
               <div
                 class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}{{ message.tags }}{% endif %}"
