@@ -1,6 +1,16 @@
 {% load static %}
 {% include "header.html" %}
 <link rel="stylesheet" href="{% static '/compiled/css/viewAllLostItem.css' %}" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <body>
     <script src="{% static '/static/js/initTheme.js' %}"></script>
     <div id="app">
@@ -64,9 +74,10 @@
             </div>
 
             <div class="table-responsive">
-              <table class="table table-hover mb-0">
+              <table class="table table-hover mb-0 table table-striped" id="table1">
                 <thead class="table-light">
                   <tr>
+                    <th>No</th>
                     <th>Photo</th>
                     <th>Item Name</th>
                     <th>Location</th>
@@ -77,32 +88,34 @@
                   </tr>
                 </thead>
                 <tbody>
+                {% for post in lost_posts %}
                   <tr>
+                    <td>{{ forloop.counter }}</td>
                     <td>
                       <img
-                        src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=60&fit=crop&crop=center"
-                        alt="iPhone"
+                        src="{{ post.photo.url }}"
+                        alt="lost item image"
                         class="item-image"
                       />
                     </td>
                     <td>
-                      <div class="fw-bold">iPhone 13</div>
-                      <small class="text-muted">Student ID</small>
+                      <div class="fw-bold">{{ post.item_name }}</div>
+                      <small class="text-muted">{{ post.student.username }}</small>
                     </td>
                     <td>
                       <i class="bi bi-geo-alt-fill text-danger"></i>
-                      Main Library
+                      {{ post.location }}
                     </td>
                     <td>
                       <div class="me-1 mb-1 d-inline-block">
                                 <!-- Button trigger for full size modal -->
                                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#full-scrn">
+                                    data-bs-target="#full-scrn-{{ post.id }}">
                                     See details
                                 </button>
 
                                 <!-- full size modal-->
-                                <div class="modal fade text-left w-100" id="full-scrn" tabindex="-1" role="dialog"
+                                <div class="modal fade text-left w-100" id="full-scrn-{{ post.id }}" tabindex="-1" role="dialog"
                                     aria-labelledby="myModalLabel20" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full"
                                         role="document">
@@ -117,15 +130,13 @@
                                             <div class="modal-body">
                                                 <!-- Large image -->
                                                 <div class="text-center mb-4">
-                                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=400&fit=crop&crop=center"
+                                                    <img src="{{ post.photo.url }}"
                                                         alt="Item Image" class="img-fluid rounded" style="max-height: 400px;">
                                                 </div>
 
                                                 <!-- Description -->
                                                 <p class="fs-5 text-muted">
-                                                    This is a lost iPhone 13 found near the main library. If this belongs to you,
-                                                    please contact the administrator or submit a claim request through the system.
-                                                    Make sure to provide valid proof of ownership.
+                                                    {{ post.description }}
                                                 </p>
                                             </div>
                                         </div>
@@ -134,11 +145,17 @@
                             </div>
                     </td>
                     <td>
-                      <div>Jan 15, 2024</div>
-                      <small class="text-muted">2:30 PM</small>
+                      <div>{{ post.event_date }}</div>
+                      <small class="text-muted">{{ post.event_time }}</small>
                     </td>
                     <td>
-                      <span class="badge status-unclaimed">Missing</span>
+                      <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
+                        {% if post.status %}
+                          Claimed
+                        {% else %}
+                          Unclaimed
+                        {% endif %}
+                      </span>
                     </td>
                     <td>
                       <div class="col-12">
@@ -156,8 +173,9 @@
                                                 role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160">Claim Lost Item
+                                                        <h5 class="modal-title white" id="myModalLabel160">Claim Lost Item 
                                                         </h5>
+                                                        <h3>{{ post.id }}</h3>
                                                         <button type="button" class="close" data-bs-dismiss="modal"
                                                             aria-label="Close">
                                                             <i data-feather="x"></i>
@@ -178,131 +196,26 @@
 
                     </td>
                   </tr>
-                  <tr>
-                    <td>
-                      <img
-                        src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=60&fit=crop&crop=center"
-                        alt="iPhone"
-                        class="item-image"
-                      />
-                    </td>
-                    <td>
-                      <div class="fw-bold">iPhone 13</div>
-                      <small class="text-muted">Student ID</small>
-                    </td>
-                    <td>
-                      <i class="bi bi-geo-alt-fill text-danger"></i>
-                      Main Library
-                    </td>
-                    <td>
-                      <div class="me-1 mb-1 d-inline-block">
-                                <!-- Button trigger for full size modal -->
-                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#full-scrn">
-                                    See details
-                                </button>
-
-                                <!-- full size modal-->
-                                <div class="modal fade text-left w-100" id="full-scrn" tabindex="-1" role="dialog"
-                                    aria-labelledby="myModalLabel20" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full"
-                                        role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Lost item details</h4>
-                                                <button type="button" class="close" data-bs-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <i data-feather="x"></i>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Cake cupcake sugar plum. Sesame snaps pudding cupcake candy canes icing
-                                                cheesecake. Sweet roll
-                                                pudding lollipop apple pie gummies dragée. Chocolate bar cookie caramels
-                                                I love lollipop ice
-                                                cream tiramisu lollipop sweet.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                    </td>
-                    <td>
-                      <div>Jan 15, 2024</div>
-                      <small class="text-muted">2:30 PM</small>
-                    </td>
-                    <td>
-                      <span class="badge status-claimed">Recovered</span>
-                    </td>
-                    <td>
-                      <div class="col-12">
-                                    <div class="modal-primary me-1 mb-1 d-inline-block">
-                                        <!-- Button trigger for primary themes modal -->
-                                        <button type="button" class="btn btn-sm btn-outline-success action-btn disabled" data-bs-toggle="modal"
-                                            data-bs-target="#primary">
-                                            Claim
-                                        </button>
-
-                                        <!--primary theme Modal -->
-                                        <div class="modal fade text-left" id="primary" tabindex="-1" role="dialog"
-                                            aria-labelledby="myModalLabel160" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160">Claim Lost Item
-                                                        </h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <i data-feather="x"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        Tart lemon drops macaroon oat cake chocolate toffee chocolate
-                                                        bar icing. Pudding jelly beans
-                                                        carrot cake pastry gummies cheesecake lollipop. I love cookie
-                                                        lollipop cake I love sweet
-                                                        gummi
-                                                        bears cupcake dessert.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                    </td>
-                  </tr>
+                  {% endfor %}
                 </tbody>
               </table>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                  <div class="text-muted">
-                    Showing 1 to 5 of 23 entries
-                  </div>
-                  <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-sm mb-0">
-                      <li class="page-item disabled">
-                        <a class="page-link" href="#" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                        </a>
-                      </li>
-                      <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
             </div>
           </section>
         </div>
     {% include "footer.html" %}
+<script>
+  $(document).ready(function () {
+    $('#table1').DataTable({
+      searching: false, // enable searching
+      "pageLength": 5,
+      "lengthChange": false, // remove "show X entries" dropdown
+      "ordering": true, // enable sorting
+      "language": {
+        "paginate": {
+          "previous": "&laquo;",
+          "next": "&raquo;"
+        }
+      }
+    });
+  });
+</script>

@@ -16,10 +16,13 @@ def viewFoundItem(request):
 
 @login_required(login_url='login')
 def viewLostItem(request):
-    # This view will render the found item page
+    # Fetch all visible lost posts
+    lost_posts = Post.objects.filter(post_type='lost', is_visible=False).order_by('-created_at')
+
     context = {
         "classActiveViewAllItem": "active",
         "classActiveViewLostItem": "active",
+        "lost_posts": lost_posts,
     }
     return render(request, 'lostItem/viewLostItem.html', context)
 
