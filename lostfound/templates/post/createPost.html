@@ -41,17 +41,18 @@
                 </p>
               </div>
               <div class="card-body">
-                <form id="lostFoundForm">
+                <form id="lostFoundForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                   <div class="row">
                     <!-- Post Type -->
                     <div class="col-md-6 col-12">
                       <div class="form-group">
-                        <label for="postType"
+                        <label for="post_type"
                           >Post Type <span class="text-danger">*</span></label
                         >
                         <select
-                          id="postType"
-                          name="postType"
+                          id="post_type"
+                          name="post_type"
                           class="form-select"
                           required
                         >
@@ -85,15 +86,15 @@
                     <div class="col-md-6 col-12">
                       <div class="form-group">
                         <label for="studentId"
-                          >Student ID <span class="text-danger">*</span></label
+                          >Student ID</label
                         >
                         <input
                           type="text"
                           id="studentId"
                           name="studentId"
                           class="form-control"
-                          placeholder="e.g., STU-2024001"
-                          required
+                          placeholder="{{ student.username }}"
+                          disabled
                         />
                       </div>
                     </div>
