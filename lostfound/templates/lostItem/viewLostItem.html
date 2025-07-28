@@ -54,20 +54,18 @@
                 <div class="row mb-3">
                   <div class="col-md-6"></div>
                   <div class="col-md-3">
-                    <select class="form-select">
-                      <option value="">All Status</option>
-                      <option value="unclaimed">Recovered</option>
-                      <option value="claimed">Missing</option>
-                    </select>
+                    <a href="{% url 'create_post' %}" class="btn btn-primary">+ Post Lost Item</a>
                   </div>
                   <div class="col-md-3">
-                    <select class="form-select">
-                      <option value="">All Locations</option>
-                      <option value="library">Library</option>
-                      <option value="cafeteria">Cafeteria</option>
-                      <option value="classroom">Classroom</option>
-                      <option value="parking">Parking</option>
-                    </select>
+                    <form method="get" id="location-filter-form">
+                        <select class="form-select" name="location" onchange="document.getElementById('location-filter-form').submit();">
+                          <option value="">All Locations</option>
+                          <option value="library" {% if request.GET.location == 'library' %}selected{% endif %}>Library</option>
+                          <option value="cafeteria" {% if request.GET.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
+                          <option value="classroom" {% if request.GET.location == 'classroom' %}selected{% endif %}>Classroom</option>
+                          <option value="parking" {% if request.GET.location == 'parking' %}selected{% endif %}>Parking</option>
+                        </select>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -173,21 +171,25 @@
                                                 role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160">Claim Lost Item 
+                                                        <h5 class="modal-title white" id="myModalLabel160">Claim Lost Item — Post ID#{{ post.id }}
                                                         </h5>
-                                                        <h3>{{ post.id }}</h3>
                                                         <button type="button" class="close" data-bs-dismiss="modal"
                                                             aria-label="Close">
                                                             <i data-feather="x"></i>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        Tart lemon drops macaroon oat cake chocolate toffee chocolate
-                                                        bar icing. Pudding jelly beans
-                                                        carrot cake pastry gummies cheesecake lollipop. I love cookie
-                                                        lollipop cake I love sweet
-                                                        gummi
-                                                        bears cupcake dessert.
+                                                        <p>
+                                                            If you lost this item, please visit the University Control Room with proper identification to recover it.
+                                                        </p>
+                                                        <hr />
+                                                        <h6 class="text-primary mb-1">📞 Contact Control Room</h6>
+                                                        <ul class="list-unstyled">
+                                                            <li><strong>Location:</strong> Ground Floor, Main Building</li>
+                                                            <li><strong>Phone:</strong> +8801XXXXXXXXX</li>
+                                                            <li><strong>Email:</strong> controlroom@diu.edu.bd</li>
+                                                            <li><strong>Hours:</strong> 9:00 AM – 5:00 PM (Sun–Thu)</li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>

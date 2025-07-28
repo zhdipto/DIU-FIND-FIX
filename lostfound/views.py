@@ -18,6 +18,11 @@ def viewFoundItem(request):
 def viewLostItem(request):
     # Fetch all visible lost posts
     lost_posts = Post.objects.filter(post_type='lost', is_visible=False).order_by('-created_at')
+    selected_location = request.GET.get('location')  # get location from query param
+    if selected_location:
+        lost_posts = Post.objects.filter(location__iexact=selected_location)
+    else:
+        lost_posts = Post.objects.all()
 
     context = {
         "classActiveViewAllItem": "active",
