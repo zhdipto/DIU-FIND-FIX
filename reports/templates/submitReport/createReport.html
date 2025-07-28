@@ -58,7 +58,8 @@
                   ></button>
                 </div>
 
-                <form id="issueReportForm">
+                <form id="issueReportForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
                   <div class="row">
                     <!-- Student ID -->
                     <div class="col-md-6 col-12">
@@ -71,8 +72,8 @@
                           id="studentId"
                           class="form-control"
                           name="studentId"
-                          placeholder="e.g., STU-2024001"
-                          required
+                          placeholder="{{student.username}}"
+                          disabled
                         />
                         <div class="invalid-feedback"></div>
                       </div>

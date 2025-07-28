@@ -84,6 +84,8 @@ def createPost(request):
 
     # GET request: render form
     student = request.user
+    if not student.is_authenticated:
+        return redirect('login')
     context = {
         "classActiveCreatePost": "active",
         "student": student,
