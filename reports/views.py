@@ -8,9 +8,20 @@ from reports.models import Report
 @login_required(login_url='loginCheck')
 def viewAllReports(request):
     # This view will render the page to view all reports
+    selected_location = request.GET.get('location') 
+    if selected_location:
+        report = Report.objects.filter(
+            is_visible=False,
+            location__iexact=selected_location
+        ).order_by('-submitted_at')
+    else:
+        report = Report.objects.filter(
+            is_visible=False
+        ).order_by('-submitted_at')
     context = {
         "classActiveReports": "active",
         "classActiveViewAllReports": "active",
+        "reports": report,
     }
     return render(request, 'viewReport/viewAllReport.html', context)
 

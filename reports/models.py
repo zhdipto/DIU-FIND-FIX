@@ -11,7 +11,7 @@ class Report(models.Model):
     location = models.CharField(max_length=100)
     event_date = models.DateField()
     event_time = models.TimeField()
-    photo = models.ImageField(upload_to='report_photos/', default='{{ static "report_photos/default.jpg" }}', blank=True, null=True)
+    photo = models.ImageField(upload_to='report_photos/', blank=True, null=True)
 
 
     # Boolean status: False = Unsolved, True = Solved

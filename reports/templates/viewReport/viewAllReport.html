@@ -1,6 +1,16 @@
 {% load static %}
 {% include "header.html" %}
 <link rel="stylesheet" href="{% static '/compiled/css/viewAllLostItem.css' %}" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <body>
     <script src="{% static 'js/initTheme.js' %}"></script>
     <div id="app">
@@ -32,7 +42,7 @@
                       <a href="{% url 'student_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                      Lost Items
+                      All Report
                     </li>
                   </ol>
                 </nav>
@@ -45,27 +55,25 @@
                 <div class="row mb-3">
                   <div class="col-md-6"></div>
                   <div class="col-md-3">
-                    <select class="form-select">
-                      <option value="">All Status</option>
-                      <option value="unclaimed">Unsolved</option>
-                      <option value="claimed">Solved</option>
-                    </select>
+                    <a href="{% url 'submit_report' %}" class="btn btn-primary">+ Post Report</a>
                   </div>
                   <div class="col-md-3">
-                    <select class="form-select">
-                      <option value="">All Locations</option>
-                      <option value="library">Library</option>
-                      <option value="cafeteria">Cafeteria</option>
-                      <option value="classroom">Classroom</option>
-                      <option value="parking">Parking</option>
-                    </select>
+                  <form method="get" id="location-filter-form">
+                        <select class="form-select" name="location" onchange="document.getElementById('location-filter-form').submit();">
+                          <option value="">All Locations</option>
+                          <option value="library" {% if request.GET.location == 'library' %}selected{% endif %}>Library</option>
+                          <option value="auditorium" {% if request.GET.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
+                          <option value="classroom" {% if request.GET.location == 'classroom' %}selected{% endif %}>Classroom</option>
+                          <option value="parking" {% if request.GET.location == 'parking' %}selected{% endif %}>Parking</option>
+                        </select>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
 
             <div class="table-responsive">
-              <table class="table table-hover mb-0">
+              <table class="table table-hover mb-0 table table-striped" id="table1">
                 <thead class="table-light">
                   <tr>
                     <th>No</th>
@@ -78,99 +86,100 @@
                   </tr>
                 </thead>
                 <tbody>
+                 {% for report in reports %}
                   <tr>
-                    <td>1</td>
+                    <td>{{ forloop.counter }}</td>
                     <td>
                       <img
-                        src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=60&fit=crop&crop=center"
-                        alt="iPhone"
+                        src="{% if report.photo %}{{ report.photo.url }}{% else %}{% static 'compiled/jpg/default.jpg' %}{% endif %}"
+                        alt="report image"
                         class="item-image"
                       />
-                    </td>
-                    <td>
-                      <div class="fw-bold">iPhone 13</div>
-                      <small class="text-muted">Student ID</small>
-                    </td>
-                    <td>
-                      <i class="bi bi-geo-alt-fill text-danger"></i>
-                      Main Library
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-primary action-btn">
-                        <i class="bi bi-eye"></i> View
-                      </button>
-                    </td>
-                    <td>
-                      <div>Jan 15, 2024</div>
-                      <small class="text-muted">2:30 PM</small>
-                    </td>
-                    <td>
-                      <span class="badge status-unclaimed">Unsolved</span>
-                    </td>
-                  </tr>
-                  <tr>
-                  <td>2</td>
-                    <td>
-                      <img
-                        src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=60&fit=crop&crop=center"
-                        alt="iPhone"
-                        class="item-image"
-                      />
-                    </td>
-                    <td>
-                      <div class="fw-bold">iPhone 13</div>
-                      <small class="text-muted">Student ID</small>
-                    </td>
-                    <td>
-                      <i class="bi bi-geo-alt-fill text-danger"></i>
-                      Main Library
-                    </td>
-                    <td>
-                      <button class="btn btn-sm btn-outline-primary action-btn">
-                        <i class="bi bi-eye"></i> View
-                      </button>
-                    </td>
-                    <td>
-                      <div>Jan 15, 2024</div>
-                      <small class="text-muted">2:30 PM</small>
-                    </td>
-                    <td>
-                      <span class="badge status-claimed">Sloved</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                  <div class="text-muted">
-                    Showing 1 to 5 of 23 entries
-                  </div>
-                  <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-sm mb-0">
-                      <li class="page-item disabled">
-                        <a class="page-link" href="#" aria-label="Previous">
-                          <span aria-hidden="true">&laquo;</span>
-                        </a>
-                      </li>
-                      <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">2</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                      </li>
-                      <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                          <span aria-hidden="true">&raquo;</span>
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
+                    </td>
+                    <td>
+                      <div class="fw-bold">{{ report.category }}</div>
+                      <small class="text-muted">{{ report.student.username }}</small>
+                    </td>
+                    <td>
+                      <i class="bi bi-geo-alt-fill text-danger"></i>
+                      {{ report.location }}
+                    </td>
+                    <td>
+                      <div class="me-1 mb-1 d-inline-block">
+                                <!-- Button trigger for full size modal -->
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    data-bs-target="#full-scrn-{{ report.id }}">
+                                    See details
+                                </button>
+
+                                <!-- full size modal-->
+                                <div class="modal fade text-left w-100" id="full-scrn-{{ report.id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="myModalLabel20" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full"
+                                        role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel20">Lost item details</h4>
+                                                <button type="button" class="close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <i data-feather="x"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Large image -->
+                                                <div class="text-center mb-4">
+                                                    <img
+                                                      src="{% if report.photo %}{{ report.photo.url }}{% else %}{% static 'compiled/jpg/default.jpg' %}{% endif %}"
+                                                      alt="report image" class="img-fluid rounded" style="max-height: 400px;"
+                                                    />
+                                                </div>
+
+                                                <!-- Description -->
+                                                <p class="fs-5 text-muted">
+                                                    {{ report.description }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                    <td>
+                      <div>{{ report.event_date }}</div>
+                      <small class="text-muted">{{ report.event_time }}</small>
+                    </td>
+                    <td>
+                      <span class="badge {% if report.status %}status-claimed{% else %}status-unclaimed{% endif %}">
+                        {% if report.status %}
+                          Solved
+                        {% else %}
+                          Unsolved
+                        {% endif %}
+                      </span>
+                    </td>
+                  </tr>
+                  </tbody>
+                  {% endfor %}
+              </table>
             </div>
           </section>
         </div>
 
 {% include "footer.html" %}
+<script>
+  $(document).ready(function () {
+    $('#table1').DataTable({
+      searching: false, // enable searching
+      "pageLength": 5,
+      "lengthChange": false, // remove "show X entries" dropdown
+      "ordering": true, // enable sorting
+      "language": {
+        "paginate": {
+          "previous": "&laquo;",
+          "next": "&raquo;"
+        }
+      }
+    });
+  });
+</script>
