@@ -8,21 +8,42 @@ from users.models import Student
 @login_required(login_url='login')
 def viewFoundItem(request):
     # This view will render the found item page
+    selected_location = request.GET.get('location')  # Get location from query param
+    if selected_location:
+        found_posts = Post.objects.filter(
+            post_type='found',
+            is_visible=False,
+            location__iexact=selected_location
+        ).order_by('-created_at')
+    else:
+        found_posts = Post.objects.filter(
+            post_type='found',
+            is_visible=False
+        ).order_by('-created_at')
+
     context = {
         "classActiveViewAllItem": "active",
         "classActiveViewFoundItem": "active",
+        "found_posts": found_posts,
     }
     return render(request, 'foundItem/viewFoundItem.html', context)
 
 @login_required(login_url='login')
 def viewLostItem(request):
     # Fetch all visible lost posts
-    lost_posts = Post.objects.filter(post_type='lost', is_visible=False).order_by('-created_at')
-    selected_location = request.GET.get('location')  # get location from query param
+    selected_location = request.GET.get('location')  # Get location from query param
+
     if selected_location:
-        lost_posts = Post.objects.filter(location__iexact=selected_location)
+        lost_posts = Post.objects.filter(
+            post_type='lost',
+            is_visible=False,
+            location__iexact=selected_location
+        ).order_by('-created_at')
     else:
-        lost_posts = Post.objects.all()
+        lost_posts = Post.objects.filter(
+            post_type='lost',
+            is_visible=False
+        ).order_by('-created_at')
 
     context = {
         "classActiveViewAllItem": "active",
