@@ -1,9 +1,7 @@
 import datetime
 from django.contrib import messages
 from django.shortcuts import render, redirect
-
 from lostfound.models import Post
-
 from .models import Student 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -158,3 +156,19 @@ def logout_view(request):
     logout(request)
     messages.success(request, 'Successfully logged out')
     return redirect('home')
+
+@login_required(login_url='login')
+def viewMyPosts(request):
+    student = request.user
+    selected_post_type = request.GET.get('post_type')
+
+    if selected_post_type == 'lost':
+        posts = Post.objects.filter(student=student, post_type='lost').order_by('-created_at')
+    else:
+        posts = Post.objects.filter(student=student, post_type='found').order_by('-created_at')
+
+    context = {
+        "classActiveDashboard": "active",
+        "posts": posts,
+    }
+    return render(request, 'student_dashboard_content/myPost.html', context)
