@@ -1,6 +1,9 @@
 import datetime
 from django.contrib import messages
 from django.shortcuts import render, redirect
+
+from lostfound.models import Post
+
 from .models import Student 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -75,9 +78,13 @@ def loginCheck(request):
 @login_required(login_url='login')
 def student_dashboard(request):
     student = request.user
+    lost_posts = Post.objects.filter(post_type='Lost').order_by('-created_at')[:3]
+    found_posts = Post.objects.filter(post_type='Found').order_by('-created_at')[:3]
     context = {
         "student": student,
         "classActiveDashboard": "active",
+        "lost_posts": lost_posts,
+        "found_posts": found_posts,
     }
     return render(request, 'pages/studentDashboard.html', context)
 

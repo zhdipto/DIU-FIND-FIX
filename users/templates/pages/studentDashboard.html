@@ -30,7 +30,7 @@
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">Total Post</h6>
+                      <h6 class="text-muted font-semibold">My Posts</h6>
                       <h6 class="font-extrabold mb-0">12</h6>
                     </div>
                   </div>
@@ -51,7 +51,7 @@
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">Approved Post</h6>
+                      <h6 class="text-muted font-semibold">Pending Posts</h6>
                       <h6 class="font-extrabold mb-0">9</h6>
                     </div>
                   </div>
@@ -72,7 +72,7 @@
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">Claim Item</h6>
+                      <h6 class="text-muted font-semibold">My Claims</h6>
                       <h6 class="font-extrabold mb-0">3</h6>
                     </div>
                   </div>
@@ -93,7 +93,7 @@
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">Issue Reported</h6>
+                      <h6 class="text-muted font-semibold">My Reports</h6>
                       <h6 class="font-extrabold mb-0">5</h6>
                     </div>
                   </div>
@@ -107,15 +107,53 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h4>Post Activity Overview</h4>
+                  <h4>Recent Lost Posts</h4>
                 </div>
                 <div class="card-body">
-                  <div id="chart-post-activity"></div>
+                  <div class="row g-3">
+                    {% for post in lost_posts %}
+                      <div class="col-md-4">
+                        <div class="animated-post-card p-3 shadow rounded bg-warning-subtle">
+                          <h6 class="fw-bold">{{ post.item_name }}</h6>
+                          <p class="mb-1 text-muted">{{ post.location }}</p>
+                          <small class="text-muted">{{ post.created_at }}</small>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Recent Found Posts</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    {% for post in found_posts %}
+                      <div class="col-md-4">
+                        <div class="animated-post-card p-3 shadow rounded bg-warning-subtle">
+                          <h6 class="fw-bold">{{ post.item_name }}</h6>
+                          <p class="mb-1 text-muted">{{ post.location }}</p>
+                          <small class="text-muted">{{ post.created_at }}</small>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
         </div>
+
+        
 
         <!-- Right side info -->
         <div class="col-12 col-lg-3">
@@ -125,11 +163,15 @@
               <div class="card-body py-4 px-4">
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-xl">
-                    <img src="{% static '/compiled/jpg/1.jpg' %}" alt="Student Image" />
+                    <img src="{% if student.profile_photo %}
+                            {{ student.profile_photo.url }}
+                        {% else %}
+                            {% static 'compiled/jpg/2.jpg' %}
+                        {% endif %}" alt="Student Image" />
                   </div>
                   <div class="ms-3 name">
-                    <h5 class="font-bold">{{ user.student_name }}</h5>
-                    <h6 class="text-muted mb-0">{{ user.student_id }}</h6>
+                    <h5 class="font-bold">{{ student.student_name }}</h5>
+                    <h6 class="text-muted mb-0">{{ student.student_id }}</h6>
                   </div>
                 </div>
               </div>
@@ -138,42 +180,34 @@
 
           <!-- Recent Claims -->
           <div class="card">
-            <div class="card-header">
-              <h4>Recent Claims</h4>
-            </div>
             <div class="card-content pb-4">
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="name ms-1">
-                  <h5 class="mb-1">USB Drive</h5>
-                  <h6 class="text-muted mb-0">Pending</h6>
-                </div>
-              </div>
-              <div class="recent-message d-flex px-4 py-3">
-                <div class="name ms-1">
-                  <h5 class="mb-1">Backpack</h5>
-                  <h6 class="text-muted mb-0">Approved</h6>
-                </div>
-              </div>
               <div class="px-4">
                 <button
                   class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
                 >
-                  View All Claims
+                  My Posts
+                </button>
+              </div>
+            </div>
+            <div class="card-content pb-4">
+              <div class="px-4">
+                <button
+                  class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
+                >
+                  My Reports
+                </button>
+              </div>
+            </div>
+            <div class="card-content pb-4">
+              <div class="px-4">
+                <button
+                  class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
+                >
+                  My Claims
                 </button>
               </div>
             </div>
           </div>
-
-          <!-- Issue Report Chart Placeholder -->
-          <div class="card">
-            <div class="card-header">
-              <h4>Issue Reports</h4>
-            </div>
-            <div class="card-body">
-              <div id="chart-issue-status"></div>
-            </div>
-          </div>
-        </div>
       </section>
     </div>
 {% include "footer.html" %}
