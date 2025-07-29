@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import Student 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def home(request):
@@ -146,3 +146,8 @@ def student_profile_edit(request):
     return render(request, 'accounts/studentProfile.html', {
         'student': student
     })
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'Successfully logged out')
+    return redirect('home')
