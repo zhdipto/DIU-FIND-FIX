@@ -2,6 +2,7 @@ import datetime
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from lostfound.models import Post
+from reports.models import Report
 from .models import Student 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -172,3 +173,14 @@ def viewMyPosts(request):
         "posts": posts,
     }
     return render(request, 'student_dashboard_content/myPost.html', context)
+
+@login_required(login_url='login')
+def viewMyReports(request):
+    student = request.user
+    reports = Report.objects.filter(student=student).order_by('-submitted_at')
+
+    context = {
+        "classActiveDashboard": "active",
+        "reports": reports,
+    }
+    return render(request, 'student_dashboard_content/myReport.html', context)

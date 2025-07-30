@@ -12,7 +12,7 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 <body>
-    <script src="{% static 'js/initTheme.js' %}"></script>
+    <script src="{% static '/static/js/initTheme.js' %}"></script>
     <div id="app">
     {% include "sidebar.html" %}
     <div id="main">
@@ -26,10 +26,9 @@
           <div class="page-title">
             <div class="row">
               <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>All Report List</h3>
+                <h3>My All Post List</h3>
                 <p class="text-subtitle text-muted">
-                  A pretty helpful component to show organized information to
-                  the user.
+                  Everything you have posted will be listed here.
                 </p>
               </div>
               <div class="col-12 col-md-6 order-md-2 order-first">
@@ -42,7 +41,7 @@
                       <a href="{% url 'student_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                      All Report
+                      My Posts
                     </li>
                   </ol>
                 </nav>
@@ -54,20 +53,6 @@
               <div class="card-body">
                 <div class="row mb-3">
                   <div class="col-md-6"></div>
-                  <div class="col-md-3">
-                    <a href="{% url 'submit_report' %}" class="btn btn-primary">+ Post Report</a>
-                  </div>
-                  <div class="col-md-3">
-                  <form method="get" id="location-filter-form">
-                        <select class="form-select" name="location" onchange="document.getElementById('location-filter-form').submit();">
-                          <option value="">All Locations</option>
-                          <option value="library" {% if request.GET.location == 'library' %}selected{% endif %}>Library</option>
-                          <option value="auditorium" {% if request.GET.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
-                          <option value="classroom" {% if request.GET.location == 'classroom' %}selected{% endif %}>Classroom</option>
-                          <option value="parking" {% if request.GET.location == 'parking' %}selected{% endif %}>Parking</option>
-                        </select>
-                    </form>
-                  </div>
                 </div>
               </div>
             </div>
@@ -86,7 +71,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                 {% for report in reports %}
+                {% for report in reports %}
                   <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>
@@ -95,10 +80,9 @@
                         alt="report image"
                         class="item-image"
                       />
-
                     </td>
                     <td>
-                      <div class="fw-bold">{{ report.category }}</div>
+                      <div class="fw-bold">{{ report.report_reason }}</div>
                       <small class="text-muted">{{ report.student.username }}</small>
                     </td>
                     <td>
@@ -120,7 +104,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Lost item details</h4>
+                                                <h4 class="modal-title" id="myModalLabel20">Report details</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -129,10 +113,8 @@
                                             <div class="modal-body">
                                                 <!-- Large image -->
                                                 <div class="text-center mb-4">
-                                                    <img
-                                                      src="{% if report.photo %}{{ report.photo.url }}{% else %}{% static 'compiled/jpg/default.jpg' %}{% endif %}"
-                                                      alt="report image" class="img-fluid rounded" style="max-height: 400px;"
-                                                    />
+                                                    <img src="{% if report.photo %}{{ report.photo.url }}{% else %}{% static 'compiled/jpg/default.jpg' %}{% endif %}"
+                                                      alt="report image" class="img-fluid rounded" style="max-height: 400px;">
                                                 </div>
 
                                                 <!-- Description -->
@@ -157,16 +139,23 @@
                           Unsolved
                         {% endif %}
                       </span>
+
+                      <span class="badge {% if report.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {% if report.is_visible %}
+                          Approved
+                        {% else %}
+                          Pending
+                        {% endif %}
+                      </span>
                     </td>
                   </tr>
-                  </tbody>
                   {% endfor %}
+                </tbody>
               </table>
             </div>
           </section>
         </div>
-
-{% include "footer.html" %}
+    {% include "footer.html" %}
 <script>
   $(document).ready(function () {
     $('#table1').DataTable({
