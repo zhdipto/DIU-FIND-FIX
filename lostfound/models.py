@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import Student
+from users.models import User
 # Create your models here.
 
 class Post(models.Model):
@@ -7,9 +7,8 @@ class Post(models.Model):
         ('lost', 'Lost Item'),
         ('found', 'Found Item'),
     ]
-
     # Reference to the student who created the post
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 1})
 
     # Type of the post: Lost or Found
     post_type = models.CharField(max_length=10, choices=POST_TYPE_CHOICES)
@@ -26,7 +25,7 @@ class Post(models.Model):
     is_visible = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.post_type.title()} post by {self.student.username} at {self.location}"
+        return f"{self.post_type.title()} post by {self.user.username} at {self.location}"
 
     class Meta:
         db_table = 'posts'  # custom table name (optional)

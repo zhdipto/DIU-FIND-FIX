@@ -37,7 +37,7 @@ def submitReport(request):
         photo = request.FILES.get('photo')
 
         report = Report.objects.create(
-            student=request.user,
+            user=request.user,
             category=catagory,
             description=description,
             location=location,
@@ -51,12 +51,12 @@ def submitReport(request):
 
         return redirect('submit_report')
     
-    student = request.user
-    if not student.is_authenticated:
+    user = request.user
+    if not user.is_authenticated:
         return redirect('login')
     context = {
         "classActiveReports": "active",
         "classActiveSubmitReport": "active",
-        "student": student,
+        "user": user,
     }
     return render(request, 'submitReport/createReport.html', context)

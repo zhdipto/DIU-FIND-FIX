@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from lostfound.models import Post
 from reports.models import Report
-from .models import Student 
+from .models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
@@ -32,7 +32,7 @@ def register(request):
             messages.add_message(request, messages.ERROR, 'Please use your university email address')
             return redirect('register')
 
-        if Student.objects.filter(student_id=student_id).exists():
+        if User.objects.filter(student_id=student_id).exists():
             messages.add_message(request, messages.ERROR, 'Student ID already exists')
             return redirect('register')
 
@@ -40,17 +40,17 @@ def register(request):
             messages.add_message(request, messages.ERROR, 'Passwords do not match')
             return redirect('register')
 
-        student = Student.objects.create(
+        user = User.objects.create(
             username=student_id,
-            student_name=student_name,
+            name=student_name,
             student_id=student_id,
             email=email,
             phone_number=phone_number,
             birth_date=birth_date,
             gender=gender,
         )
-        student.set_password(password)
-        student.save()
+        user.set_password(password)
+        user.save()
 
         return redirect('home')
 
@@ -160,13 +160,13 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def viewMyPosts(request):
-    student = request.user
+    user = request.user
     selected_post_type = request.GET.get('post_type')
 
     if selected_post_type == 'lost':
-        posts = Post.objects.filter(student=student, post_type='lost').order_by('-created_at')
+        posts = Post.objects.filter(user=user, post_type='lost').order_by('-created_at')
     else:
-        posts = Post.objects.filter(student=student, post_type='found').order_by('-created_at')
+        posts = Post.objects.filter(user=user, post_type='found').order_by('-created_at')
 
     context = {
         "classActiveDashboard": "active",
@@ -176,8 +176,8 @@ def viewMyPosts(request):
 
 @login_required(login_url='login')
 def viewMyReports(request):
-    student = request.user
-    reports = Report.objects.filter(student=student).order_by('-submitted_at')
+    user = request.user
+    reports = Report.objects.filter(user=user).order_by('-submitted_at')
 
     context = {
         "classActiveDashboard": "active",

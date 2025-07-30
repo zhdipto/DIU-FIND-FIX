@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Post
-from users.models import Student
+from users.models import User
 # Create your views here.
 
 @login_required(login_url='login')
@@ -66,7 +66,7 @@ def createPost(request):
 
         # Create a new post
         post = Post.objects.create(
-            student=request.user,  # ForeignKey to Student
+            user=request.user,  # ForeignKey to Student
             item_name=itemName,
             description=description,
             location=location,
@@ -83,12 +83,12 @@ def createPost(request):
         return redirect('create_post')  # Change this to your view post list page
 
     # GET request: render form
-    student = request.user
-    if not student.is_authenticated:
+    user = request.user
+    if not user.is_authenticated:
         return redirect('login')
     context = {
         "classActiveCreatePost": "active",
-        "student": student,
+        "student": user,
     }
     return render(request, 'post/createPost.html', context)
 

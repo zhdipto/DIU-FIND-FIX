@@ -52,7 +52,7 @@
                           <option value="">All Locations</option>
                           <option value="library" {% if request.GET.location == 'library' %}selected{% endif %}>Library</option>
                           <option value="cafeteria" {% if request.GET.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
-                          <option value="classroom" {% if request.GET.location == 'classroom' %}selected{% endif %}>Classroom</option>
+                          <option value="Knowledge Tower" {% if request.GET.location == 'Knowledge Tower' %}selected{% endif %}>Knowledge Tower</option>
                           <option value="parking" {% if request.GET.location == 'parking' %}selected{% endif %}>Parking</option>
                         </select>
                     </form>
@@ -88,7 +88,7 @@
                     </td>
                     <td>
                       <div class="fw-bold">{{ post.item_name }}</div>
-                      <small class="text-muted">{{ post.student.username }}</small>
+                      <small class="text-muted">{{ post.user.username }}</small>
                     </td>
                     <td>
                       <i class="bi bi-geo-alt-fill text-danger"></i>
