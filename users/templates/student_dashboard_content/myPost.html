@@ -154,6 +154,14 @@
                           Unclaimed
                         {% endif %}
                       </span>
+
+                      <span class="badge {% if post.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {% if post.is_visible %}
+                          Approved
+                        {% else %}
+                          Pending
+                        {% endif %}
+                      </span>
                     </td>
                     <td>
                       <div class="col-12">
