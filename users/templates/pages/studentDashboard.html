@@ -158,20 +158,20 @@
         <!-- Right side info -->
         <div class="col-12 col-lg-3">
           <!-- Profile Info -->
-          <a href="{% url 'student_profile' %}" class="card-link">
+          <a href="{% url 'view_profile' %}" class="card-link">
             <div class="card">
               <div class="card-body py-4 px-4">
                 <div class="d-flex align-items-center">
                   <div class="avatar avatar-xl">
-                    <img src="{% if student.profile_photo %}
-                            {{ student.profile_photo.url }}
+                    <img src="{% if user.profile_photo %}
+                            {{ user.profile_photo.url }}
                         {% else %}
                             {% static 'compiled/jpg/2.jpg' %}
                         {% endif %}" alt="Student Image" />
                   </div>
                   <div class="ms-3 name">
-                    <h5 class="font-bold">{{ student.name }}</h5>
-                    <h6 class="text-muted mb-0">{{ student.student_id }}</h6>
+                    <h5 class="font-bold">{{ user.name }}</h5>
+                    <h6 class="text-muted mb-0">{{ user.student_id }}</h6>
                   </div>
                 </div>
               </div>

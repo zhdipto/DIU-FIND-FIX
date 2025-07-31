@@ -81,11 +81,14 @@
               <li class="sidebar-title">Menu</li>
 
               <li class="sidebar-item {{ classActiveDashboard }}">
-                <a href="{% url 'student_dashboard' %}" class="sidebar-link">
+                <a href="{% if request.user.role == 1 %}{% url 'student_dashboard' %}
+                {% elif request.user.role == 3 %}{% url 'super_admin_dashboard' %}{% endif %}" class="sidebar-link">
                   <i class="bi bi-grid-fill"></i>
                   <span>Dashboard</span>
                 </a>
               </li>
+
+              {% if request.user.role == 1 or request.user.role == 2 %}
 
               <li class="sidebar-item has-sub {{ classActiveViewAllItem}}">
                 <a href="#" class="sidebar-link">
@@ -138,10 +141,13 @@
                 </ul>
               </li>
 
+              {% endif %}
+
               <li class="sidebar-title">Accounts</li>
 
+
               <li class="sidebar-item {{ classActiveAccount }}">
-                <a href="{% url 'student_profile' %}" class="sidebar-link">
+                <a href="{% url 'view_profile' %}" class="sidebar-link">
                   <i class="bi bi-person-circle"></i>
                   <span>Profile</span>
                 </a>

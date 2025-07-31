@@ -57,26 +57,36 @@ def register(request):
     return render(request, 'registration/registration.html')
 def loginCheck(request):
     if request.method == 'POST':
-        student_id = request.POST.get('student_id')
+        username = request.POST.get('id')  # Can be student_id or employee_id
         password = request.POST.get('password')
-        
-        # Use Django's authenticate to verify the user
-        user = authenticate(request, username=student_id, password=password)
-        
-        if user is not None:
-            # If authentication is successful, log the user in
-            login(request, user)
-            return redirect('student_dashboard')
-        else:
-            # If authenticate returns None, the credentials were wrong
-            messages.add_message(request, messages.ERROR, 'Invalid Student ID or password')
-            return redirect('login') # Redirect back to the login form
 
-    return render(request, 'login/login.html', {})
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            # Redirect based on role
+            if user.role == 1:  # Student
+                return redirect('student_dashboard')
+            elif user.role == 2:  # Admin
+                return redirect('admin_dashboard')  # You must define this URL/view
+            elif user.role == 3:  # Super Admin
+                return redirect('super_admin_dashboard')  # You must define this URL/view
+            else:
+                messages.error(request, 'Role not recognized')
+                return redirect('login')
+        else:
+            messages.error(request, 'Invalid ID or password')
+            return redirect('login')
+
+    return render(request, 'login/login.html')
 
 @login_required(login_url='login')
 def student_dashboard(request):
     student = request.user
+    if student.role != 1:  # Ensure the user is a Student
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
     lost_posts = Post.objects.filter(post_type='Lost').order_by('-created_at')[:3]
     found_posts = Post.objects.filter(post_type='Found').order_by('-created_at')[:3]
     context = {
@@ -88,32 +98,33 @@ def student_dashboard(request):
     return render(request, 'pages/studentDashboard.html', context)
 
 @login_required(login_url='login')
-def student_profile(request):
-    student = request.user
+def view_profile(request):
+    user = request.user
     context = {
-        "student": student,
+        "user": user,
         "classActiveAccount": "active",
     }
-    return render(request, 'accounts/studentProfile.html', context)
+    return render(request, 'accounts/profile.html', context)
 
 
 @login_required(login_url='login')
-def student_profile_edit(request):
-    student = request.user
+def profile_edit(request):
+    
+    user = request.user
 
     if request.method == 'POST':
-        student_name = request.POST.get('student_name', '').strip()
+        user_name = request.POST.get('user_name', '').strip()
         phone_number = request.POST.get('phone_number', '').strip()
         birth_date = request.POST.get('birth_date', '').strip()
         gender = request.POST.get('gender', '').strip()
         profile_photo = request.FILES.get('profile_photo')
         if request.POST.get('password'):
-            student.set_password(request.POST.get('password'))
+            user.set_password(request.POST.get('password'))
 
         # Validation
         errors = []
 
-        if student_name and not student_name.replace(" ", "").isalpha():
+        if user_name and not user_name.replace(" ", "").isalpha():
             errors.append("Name must contain only letters.")
 
         if phone_number:
@@ -128,29 +139,29 @@ def student_profile_edit(request):
         if errors:
             for error in errors:
                 messages.error(request, error)
-            return render(request, 'accounts/studentProfile.html', {
-                'student': student,
+            return render(request, 'accounts/profile.html', {
+                'user': user,
                 'input_data': request.POST
             })
 
         # Only update fields that were submitted
-        if student_name:
-            student.student_name = student_name
+        if user_name:
+            user.name = user_name
         if phone_number:
-            student.phone_number = phone_number
+            user.phone_number = phone_number
         if birth_date:
-            student.birth_date = birth_date
+            user.birth_date = birth_date
         if gender:
-            student.gender = gender
+            user.gender = gender
         if profile_photo:
-            student.profile_photo = profile_photo
+            user.profile_photo = profile_photo
 
-        student.save()
+        user.save()
         messages.success(request, 'Profile updated successfully')
-        return redirect('student_profile')
+        return redirect('view_profile')
 
-    return render(request, 'accounts/studentProfile.html', {
-        'student': student
+    return render(request, 'accounts/profile.html', {
+        'user': user
     })
 
 def logout_view(request):
@@ -184,3 +195,17 @@ def viewMyReports(request):
         "reports": reports,
     }
     return render(request, 'student_dashboard_content/myReport.html', context)
+
+@login_required(login_url='login')
+def superAdminDashboard(request):
+    user = request.user
+    if user.role != 3:  # Ensure the user is a Super Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    context = {
+        "user": user,
+        "total_students": User.objects.filter(role=1).count(),
+        "total_admins": User.objects.filter(role=2).count(),
+        "classActiveDashboard": "active",
+    }
+    return render(request, 'superAdmin/superAdminDashboard.html', context)
