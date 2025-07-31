@@ -1,92 +1,113 @@
-{% load static %}
-{% include "header.html" %}
+{% load static %} {% include "header.html" %}
 <body>
   <script src="{% static 'js/initTheme.js' %}"></script>
   <div id="app">
     {% include "sidebar.html" %}
     <div id="main">
-        <header class="mb-3">
-          <a href="#" class="burger-btn d-block d-xl-none">
-            <i class="bi bi-justify fs-3"></i>
-          </a>
-        </header>
-    <div class="page-heading">
-      <h3>Super Admin Dashboard</h3>
-    </div>
-    <div class="page-content">
-      <section class="row">
-        <div class="col-12 col-lg-9">
-          <div class="row">
-            <!-- Total Posts -->
-            <div class="col-6 col-lg-3 col-md-6">
-              <div class="card">
-                <div class="card-body px-4 py-4-5">
-                  <div class="row">
-                    <div
-                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
-                    >
-                      <div class="stats-icon purple mb-2">
-                        <i class="iconly-boldDocument"></i>
+      <header class="mb-3">
+        <a href="#" class="burger-btn d-block d-xl-none">
+          <i class="bi bi-justify fs-3"></i>
+        </a>
+      </header>
+      <div class="page-heading">
+        <h3>Super Admin Dashboard</h3>
+      </div>
+      <div class="page-content">
+        <section class="row">
+          <div class="col-12 col-lg-9">
+            <div class="row">
+              <div class="col-6 col-lg-3 col-md-6">
+                <div class="card">
+                  <div class="card-body px-4 py-4-5">
+                    <div class="row">
+                      <div
+                        class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                      >
+                        <div class="stats-icon purple mb-2">
+                          <i class="iconly-boldSetting"></i>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">Total Admin</h6>
-                      <h6 class="font-extrabold mb-0">{{ total_admins }}</h6>
+                      <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                        <h6 class="text-muted font-semibold">Total Admin</h6>
+                        <h6 class="font-extrabold mb-0">{{ total_admins }}</h6>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- Approved Posts -->
-            <div class="col-6 col-lg-3 col-md-6">
-              <div class="card">
-                <div class="card-body px-4 py-4-5">
-                  <div class="row">
-                    <div
-                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
-                    >
-                      <div class="stats-icon green mb-2">
-                        <i class="iconly-boldTick-Square"></i>
+              <div class="col-6 col-lg-3 col-md-6">
+                <div class="card">
+                  <div class="card-body px-4 py-4-5">
+                    <div class="row">
+                      <div
+                        class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                      >
+                        <div class="stats-icon green mb-2">
+                          <i class="iconly-boldUser"></i>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">Total Student</h6>
-                      <h6 class="font-extrabold mb-0">{{ total_students }}</h6>
+                      <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                        <h6 class="text-muted font-semibold">Total Student</h6>
+                        <h6 class="font-extrabold mb-0">
+                          {{ total_students }}
+                        </h6>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <!-- Create Admin Card -->
+              <div class="col-6 col-lg-3 col-md-6">
+                <div class="card">
+                  <div class="card-body px-4 py-4-5">
+                    <div class="row">
+                      <div
+                        class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                      >
+                        <div class="stats-icon blue mb-2">
+                          <i class="iconly-boldProfile"></i>
+                        </div>
+                      </div>
+                      <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                        <h6 class="text-muted font-semibold">Create Admin</h6>
+                        <a href="{% url 'create_admin' %}" class="btn btn-primary btn-sm">
+                          <i class="bi bi-plus-circle"></i> Add Admin
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
-
-        </div>
-
-        
-
-        <!-- Right side info -->
-        <div class="col-12 col-lg-3">
-          <!-- Profile Info -->
-          <a href="{% url 'view_profile' %}" class="card-link">
-            <div class="card">
-              <div class="card-body py-4 px-4">
-                <div class="d-flex align-items-center">
-                  <div class="avatar avatar-xl">
-                    <img src="{% if user.profile_photo %}
+          </div>
+          <!-- Right side info -->
+            <div class="col-12 col-lg-3">
+              <a href="{% url 'view_profile' %}" class="card-link">
+                <div class="card">
+                  <div class="card-body py-4 px-4">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar avatar-xl">
+                        <img
+                          src="{% if user.profile_photo %}
                             {{ user.profile_photo.url }}
                         {% else %}
                             {% static 'compiled/jpg/2.jpg' %}
-                        {% endif %}" alt="User Image" />
-                  </div>
-                  <div class="ms-3 name">
-                    <h5 class="font-bold">{{ user.name }}</h5>
+                        {% endif %}"
+                          alt="User Image"
+                        />
+                      </div>
+                      <div class="ms-3 name">
+                        <h5 class="font-bold">{{ user.name }}</h5>
+                        <h6>Super Admin</h6>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </a>
             </div>
-          </a>
-
-          <!-- Recent Claims -->
-          </div>
-      </section>
-    </div>
-{% include "footer.html" %}
+        </section>
+      </div>
+ {% include "footer.html" %}

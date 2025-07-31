@@ -209,3 +209,54 @@ def superAdminDashboard(request):
         "classActiveDashboard": "active",
     }
     return render(request, 'superAdmin/superAdminDashboard.html', context)
+
+@login_required(login_url='login')
+def createAdmin(request):
+    user = request.user
+    if user.role != 3:  # Ensure the user is a Super Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
+    if request.method == 'POST':
+        name = request.POST.get('fullName')
+        employee_id = request.POST.get('employee_id')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+        birth_date = request.POST.get('birthday')
+        gender = request.POST.get('gender')  
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        photo = request.FILES.get('profile_photo')
+
+        if not email.endswith('diu.edu.bd'):
+            messages.add_message(request, messages.ERROR, 'Please use your university email address')
+            return redirect('create_admin')
+
+        if User.objects.filter(employee_id=employee_id).exists():
+            messages.error(request, 'Employee ID already exists.')
+            return redirect('create_admin')
+
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('create_admin')
+
+        user = User.objects.create(
+            username=employee_id,
+            name=name,
+            employee_id=employee_id,
+            email=email,
+            phone_number=phone_number,
+            birth_date=birth_date,
+            gender=gender,
+            role=2, # Admin role
+            profile_photo=photo
+        )
+        user.set_password(password)
+        user.save()
+
+        messages.success(request, 'Admin account created successfully.')
+        return redirect('create_admin')
+    context = {
+        "classActiveAdmin": "active",
+    }
+    return render(request, 'superAdmin/createAdmin.html', context)
