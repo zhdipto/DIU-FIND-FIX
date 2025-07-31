@@ -1,6 +1,6 @@
 import datetime
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from lostfound.models import Post
 from reports.models import Report
 from .models import User
@@ -109,7 +109,6 @@ def view_profile(request):
 
 @login_required(login_url='login')
 def profile_edit(request):
-    
     user = request.user
 
     if request.method == 'POST':
@@ -118,12 +117,11 @@ def profile_edit(request):
         birth_date = request.POST.get('birth_date', '').strip()
         gender = request.POST.get('gender', '').strip()
         profile_photo = request.FILES.get('profile_photo')
-        if request.POST.get('password'):
-            user.set_password(request.POST.get('password'))
+        password = request.POST.get('password')
 
-        # Validation
         errors = []
 
+        # Validation
         if user_name and not user_name.replace(" ", "").isalpha():
             errors.append("Name must contain only letters.")
 
@@ -141,10 +139,15 @@ def profile_edit(request):
                 messages.error(request, error)
             return render(request, 'accounts/profile.html', {
                 'user': user,
-                'input_data': request.POST
+                'input_data': {
+                    'user_name': user_name,
+                    'phone_number': phone_number,
+                    'birth_date': birth_date,
+                    'gender': gender,
+                }
             })
 
-        # Only update fields that were submitted
+        # Update user fields
         if user_name:
             user.name = user_name
         if phone_number:
@@ -155,15 +158,19 @@ def profile_edit(request):
             user.gender = gender
         if profile_photo:
             user.profile_photo = profile_photo
+        if password:
+            user.set_password(password)
 
         user.save()
         messages.success(request, 'Profile updated successfully')
+
+        # Important: if password changed, re-authenticate is needed (optional)
         return redirect('view_profile')
 
     return render(request, 'accounts/profile.html', {
         'user': user
     })
-
+    
 def logout_view(request):
     logout(request)
     messages.success(request, 'Successfully logged out')
@@ -279,3 +286,91 @@ def viewStudentList(request):
         "students": students,
     }
     return render(request, 'superAdmin/viewStudentList.html', context)
+
+@login_required(login_url='login')
+def editStudentInfo(request, student_id):
+    user = request.user
+    if user.role not in [2, 3]:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
+    student = get_object_or_404(User, id=student_id)
+    
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        student_id_input = request.POST.get('student_id', '').strip()
+        birth_date = request.POST.get('birth_date', '').strip()
+        phone_number = request.POST.get('phone_number', '').strip()
+        gender = request.POST.get('gender', '').strip()
+        profile_photo = request.FILES.get('profile_photo')
+        password = request.POST.get('password')
+        
+        errors = []
+        
+        # Validation
+        if name and not name.replace(" ", "").isalpha():
+            errors.append("Name must contain only letters.")
+        
+        if email and '@' not in email:
+            errors.append("Please enter a valid email address.")
+        
+        if phone_number:
+            if not phone_number.isdigit():
+                errors.append("Phone number must contain only digits.")
+            elif len(phone_number) < 10:
+                errors.append("Phone number must be at least 10 digits.")
+        
+        if gender and gender not in ['Male', 'Female']:
+            errors.append("Invalid gender selected.")
+        
+        # Check if email exists for other users
+        if email and User.objects.filter(email=email).exclude(id=student.id).exists():
+            errors.append("Email already exists for another user.")
+        
+        # Check if student_id exists for other users
+        if student_id_input and User.objects.filter(student_id=student_id_input).exclude(id=student.id).exists():
+            errors.append("Student ID already exists for another user.")
+        
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+            return render(request, 'accounts/editStudent.html', {
+                'student': student,
+                'input_data': {
+                    'name': name,
+                    'email': email,
+                    'student_id': student_id_input,
+                    'birth_date': birth_date,
+                    'phone_number': phone_number,
+                    'gender': gender,
+                }
+            })
+        
+        # Update student fields
+        if name:
+            student.name = name
+        if email:
+            student.email = email
+        if student_id_input:
+            student.student_id = student_id_input
+        if birth_date:
+            student.birth_date = birth_date
+        if phone_number:
+            student.phone_number = phone_number
+        if gender:
+            student.gender = gender
+        if profile_photo:
+            student.profile_photo = profile_photo
+        if password:
+            student.set_password(password)
+        
+        student.save()
+        messages.success(request, 'Student updated successfully.')
+        return redirect('edit_student_info', student_id=student.id)
+    context = {
+        "classActiveStudent": "active",
+        "student": student,
+    }
+    
+    return render(request, 'accounts/editStudent.html',context)

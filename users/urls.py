@@ -17,4 +17,5 @@ urlpatterns = [
     path('super-admin-dashboard/', views.superAdminDashboard, name='super_admin_dashboard'),
     path('create-admin/', views.createAdmin, name='create_admin'),
     path('view-student-list/', views.viewStudentList, name='view_student_list'),
+    path('edit-student-info/<int:student_id>/', views.editStudentInfo, name='edit_student_info'),
 ]

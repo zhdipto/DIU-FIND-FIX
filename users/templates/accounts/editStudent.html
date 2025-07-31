@@ -13,9 +13,9 @@
   <div class="page-title">
     <div class="row">
       <div class="col-12 col-md-6 order-md-1 order-last">
-        <h3>Account Profile</h3>
+        <h3>Student Profile</h3>
         <p class="text-subtitle text-muted">
-          A page where students can view and update their profile
+          Edit student profile information
         </p>
       </div>
       <div class="col-12 col-md-6 order-md-2 order-first">
@@ -31,7 +31,6 @@
     </div>
   </div>
 
-
   <section class="section">
     <div class="row">
       <div class="col-12 col-lg-4">
@@ -40,22 +39,16 @@
             <div class="d-flex justify-content-center align-items-center flex-column">
               <div class="avatar avatar-2xl">
                 <img
-                    src="{% if user.profile_photo %}
-                            {{ user.profile_photo.url }}
+                    src="{% if student.profile_photo %}
+                            {{ student.profile_photo.url }}
                         {% else %}
                             {% static 'compiled/jpg/2.jpg' %}
                         {% endif %}"
                     alt="Avatar"
                     class="profile-image" />
               </div>
-              <h3 class="mt-3">{{ user.name }}</h3>
-              {% if user.role == 1 %}
+              <h3 class="mt-3">{{ student.name }}</h3>
               <p class="text-small">Student</p>
-              {% elif user.role == 2 %}
-              <p class="text-small">Admin</p>
-              {% elif user.role == 3 %}
-              <p class="text-small">Super Admin</p>
-              {% endif %}
             </div>
           </div>
         </div>
@@ -64,12 +57,12 @@
           <div class="card-body">
             <div class="d-flex justify-content-center align-items-center flex-column">
               <!-- Edit Button -->
-              <div class="d-flex align-items-center mb-2">
-                <div class="form-check form-switch m-0">
-                  <input class="form-check-input" type="checkbox" id="editProfileSwitch">
-                </div>
-                <span class="ms-2"><strong>Enable to edit profile</strong></span>
+            <div class="d-flex align-items-center mb-2">
+              <div class="form-check form-switch m-0">
+                <input class="form-check-input" type="checkbox" id="editProfileSwitch">
               </div>
+              <span class="ms-2"><strong>Enable to edit profile</strong></span>
+            </div>
             </div>
           </div>
         </div>
@@ -84,51 +77,45 @@
 
       </div>
       
-
       <div class="col-12 col-lg-8">
         <div class="card">
           <div class="card-body">
-            <form method="post" enctype="multipart/form-data" action="{% url 'profile_edit' %}" id="profileForm" class="needs-validation" novalidate>
+            <!-- SINGLE FORM FOR ALL DATA INCLUDING PHOTO -->
+            <form method="post" enctype="multipart/form-data" action="{% url 'edit_student_info' student.id %}" id="profileForm" class="needs-validation" novalidate>
               {% csrf_token %}
 
               <div class="form-group">
                 <label for="name" class="form-label">Full Name</label>
                 <input type="text" name="name" id="name" class="form-control" 
-                       value="{{ user.name }}" 
+                       value="{% if input_data.name %}{{ input_data.name }}{% else %}{{ student.name }}{% endif %}" 
                        required disabled/>
               </div>
 
               <div class="form-group">
-                {% if user.role == 1 %}
                 <label for="student_id" class="form-label">Student ID</label>
-                <input type="text" name="student_id" id="student_id" class="form-control" value="{{ user.student_id }}" required disabled/>
-                {% elif user.role == 2 %}
-                <label for="employee_id" class="form-label">Employee ID</label>
-                <input type="text" name="employee_id" id="employee_id" class="form-control" value="{{ user.employee_id }}" required disabled/>
-                {% elif user.role == 3 %}
-                <label for="super_admin_username" class="form-label">Super Admin Username</label>
-                <input type="text" name="super_admin_username" id="super_admin_username" class="form-control" value="{{ user.username }}" required disabled/>
-                {% endif %}
+                <input type="text" name="student_id" id="student_id" class="form-control" 
+                       value="{% if input_data.student_id %}{{ input_data.student_id }}{% else %}{{ student.student_id }}{% endif %}" 
+                       required disabled/>
               </div>
 
               <div class="form-group">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" name="email" id="email" class="form-control" 
-                       value="{{ user.email }}" 
+                       value="{% if input_data.email %}{{ input_data.email }}{% else %}{{ student.email }}{% endif %}" 
                        required disabled />
               </div>
 
               <div class="form-group">
                 <label for="phone" class="form-label">Phone Number</label>
                 <input type="text" name="phone_number" id="phone" class="form-control" 
-                       value="{{ user.phone_number }}" 
+                       value="{% if input_data.phone_number %}{{ input_data.phone_number }}{% else %}{{ student.phone_number }}{% endif %}" 
                        required disabled />
               </div>
 
               <div class="form-group">
                 <label for="birth_date">Date of Birth</label>
                 <input type="date" id="birth_date" class="form-control" name="birth_date" 
-                       value="{{ user.birth_date|date:'Y-m-d' }}" 
+                       value="{% if input_data.birth_date %}{{ input_data.birth_date }}{% else %}{{ student.birth_date|date:'Y-m-d' }}{% endif %}" 
                        disabled />
               </div>
 
@@ -163,8 +150,7 @@
   </section>
 </div>
 
-
- {% include "footer.html" %}
+{% include "footer.html" %}
 
 <!-- JavaScript to toggle form -->
 <script>
@@ -178,9 +164,7 @@
         photoSection.style.display = "block";
         submitSection.style.display = "block";
         profileForm.querySelectorAll("input, select").forEach(input => { 
-        if (input.name !== 'email' && (input.name !== 'student_id' && input.name !== 'employee_id' && input.name !== 'super_admin_username')) {
             input.disabled = false;
-          }
         });
     } else {
         // Switch is OFF - disable editing
@@ -192,4 +176,3 @@
     }
 });
 </script>
-
