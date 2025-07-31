@@ -260,3 +260,22 @@ def createAdmin(request):
         "classActiveAdmin": "active",
     }
     return render(request, 'superAdmin/createAdmin.html', context)
+
+@login_required(login_url='login')
+def viewStudentList(request):
+    user = request.user
+    if user.role != 3:  # Ensure the user is a Super Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
+    student_id = request.GET.get('student_id')
+    if student_id:
+        students = User.objects.filter(role=1, student_id=student_id).order_by('-date_joined')
+    else:
+        # If no specific student ID is provided, show all students
+        students = User.objects.filter(role=1).order_by('-date_joined')
+    context = {
+        "classActiveStudent": "active",
+        "students": students,
+    }
+    return render(request, 'superAdmin/viewStudentList.html', context)

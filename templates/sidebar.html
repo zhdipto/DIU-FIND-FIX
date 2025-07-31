@@ -144,8 +144,8 @@
               {% endif %}
 
               {% if request.user.role == 3 or request.user.role == 2 %}
-              <li class="sidebar-item {{ classActiveAccount }}">
-                <a href="#" class="sidebar-link">
+              <li class="sidebar-item {{ classActiveStudent }}">
+                <a href="{% url 'view_student_list' %}" class="sidebar-link">
                   <i class="bi bi-people-fill"></i>
                   <span>Student</span>
                 </a>

@@ -16,4 +16,5 @@ urlpatterns = [
     path('view-my-reports/', views.viewMyReports, name='view_my_reports'),
     path('super-admin-dashboard/', views.superAdminDashboard, name='super_admin_dashboard'),
     path('create-admin/', views.createAdmin, name='create_admin'),
+    path('view-student-list/', views.viewStudentList, name='view_student_list'),
 ]
