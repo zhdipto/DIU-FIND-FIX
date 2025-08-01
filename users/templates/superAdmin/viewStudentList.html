@@ -38,7 +38,8 @@
                 >
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="{% url 'super_admin_dashboard' %}">Dashboard</a>
+                      <a href="{% if request.user.role == 2 %}{% url 'admin_dashboard' %}
+                      {% elif request.user.role == 3 %}{% url 'super_admin_dashboard' %}{% endif %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                       Student List

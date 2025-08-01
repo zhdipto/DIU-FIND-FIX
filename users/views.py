@@ -273,7 +273,7 @@ def createAdmin(request):
 @login_required(login_url='login')
 def viewStudentList(request):
     user = request.user
-    if user.role not in [2,3]:  # Ensure the user is a Super Admin
+    if user.role not in [2, 3]:  # Ensure the user is a Super Admin
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
     

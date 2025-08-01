@@ -26,12 +26,12 @@
                     <div
                       class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
                     >
-                      <div class="stats-icon purple mb-2">
+                      <div class="stats-icon green mb-2">
                         <i class="iconly-boldDocument"></i>
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">My Posts</h6>
+                      <h6 class="text-muted font-semibold">Approved Posts</h6>
                       <h6 class="font-extrabold mb-0">12</h6>
                     </div>
                   </div>
@@ -47,7 +47,7 @@
                     <div
                       class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
                     >
-                      <div class="stats-icon green mb-2">
+                      <div class="stats-icon purple mb-2">
                         <i class="iconly-boldTick-Square"></i>
                       </div>
                     </div>
@@ -73,7 +73,7 @@
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">My Claims</h6>
+                      <h6 class="text-muted font-semibold">Verified Claim</h6>
                       <h6 class="font-extrabold mb-0">3</h6>
                     </div>
                   </div>
@@ -94,7 +94,7 @@
                       </div>
                     </div>
                     <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                      <h6 class="text-muted font-semibold">My Reports</h6>
+                      <h6 class="text-muted font-semibold">Pending Report</h6>
                       <h6 class="font-extrabold mb-0">5</h6>
                     </div>
                   </div>
@@ -111,7 +111,7 @@
                   <h4>Posts (yearly)</h4>
                 </div>
                 <div class="card-body">
-                  <div class="row g-3" style="width: 600px; height: 300px;">
+                  <div class="row g-3" style="width: 600px; height: 325px;">
                     <canvas id="postsPerMonthChart"></canvas>
                   </div>
                 </div>
@@ -127,7 +127,7 @@
                   <h4>Reports (yearly)</h4>
                 </div>
                 <div class="card-body">
-                 <div class="row g-3" style="width: 600px; height: 300px;">
+                 <div class="row g-3" style="width: 600px; height: 325px;">
                  <canvas id="reportsPerMonthChart"></canvas>
                   </div>
                 </div>
@@ -167,12 +167,12 @@
           <div class="card">
             <div class="card-content pb-4">
               <div class="px-4">
-                <a href="{% url 'view_my_posts' %}" class="btn btn-block btn-xl btn-outline-primary font-bold mt-3">My Posts</a>
+                <a href="#" class="btn btn-block btn-xl btn-outline-primary font-bold mt-3">Approved post</a>
               </div>
             </div>
             <div class="card-content pb-4">
               <div class="px-4">
-                <a href="{% url 'view_my_reports' %}" class="btn btn-block btn-xl btn-outline-primary font-bold mt-3">My Reports</a>
+                <a href="#" class="btn btn-block btn-xl btn-outline-primary font-bold mt-3">Pending post</a>
               </div>
             </div>
             <div class="card-content pb-4">
@@ -180,7 +180,16 @@
                 <button
                   class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
                 >
-                  My Claims
+                  Verified Claim
+                </button>
+              </div>
+            </div>
+            <div class="card-content pb-4">
+              <div class="px-4">
+                <button
+                  class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
+                >
+                  Pending Report
                 </button>
               </div>
             </div>
