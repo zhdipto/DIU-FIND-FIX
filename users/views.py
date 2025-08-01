@@ -374,3 +374,14 @@ def editStudentInfo(request, student_id):
     }
     
     return render(request, 'accounts/editStudent.html',context)
+@login_required(login_url='login')
+def deleteStudent(request, student_id):
+    user = request.user
+    if user.role not in [2, 3]:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    student = get_object_or_404(User, id=student_id)
+    student.delete()
+    messages.success(request, 'Student deleted successfully.')
+    return redirect('view_student_list')
