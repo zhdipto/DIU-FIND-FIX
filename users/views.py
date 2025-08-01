@@ -445,22 +445,22 @@ def editAdminInfo(request, employee_id):
             errors.append("Invalid gender selected.")
         
         # Check if email exists for other users
-        if email and User.objects.filter(email=email).exclude(id=student.id).exists():
+        if email and User.objects.filter(email=email).exclude(id=admin.id).exists():
             errors.append("Email already exists for another user.")
-        
-        # Check if student_id exists for other users
+
+        # Check if employee_id exists for other users
         if employee_id_input and User.objects.filter(employee_id=employee_id_input).exclude(id=admin.id).exists():
-            errors.append("Student ID already exists for another user.")
+            errors.append("Employee ID already exists for another user.")
         
         if errors:
             for error in errors:
                 messages.error(request, error)
-            return render(request, 'accounts/editStudent.html', {
+            return render(request, 'accounts/editProfile.html', {
                 'admin': admin,
                 'input_data': {
                     'name': name,
                     'email': email,
-                    'student_id': employee_id_input,
+                    'employee_id': employee_id_input,
                     'birth_date': birth_date,
                     'phone_number': phone_number,
                     'gender': gender,
@@ -487,10 +487,21 @@ def editAdminInfo(request, employee_id):
         
         admin.save()
         messages.success(request, 'Admin updated successfully.')
-        return redirect('edit_student_info', employee_id=admin.id)
+        return redirect('edit_admin_info', employee_id=admin.id)
     context = {
         "classActiveAdmin": "active",
         "student": admin,
     }
     
     return render(request, 'accounts/editProfile.html',context)
+
+@login_required(login_url='login')
+def deleteAdmin(request, employee_id):
+    user = request.user
+    if user.role != 3:  # Ensure the user is a Super Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    admin = get_object_or_404(User, id=employee_id)
+    admin.delete()
+    messages.success(request, 'Admin deleted successfully.')
+    return redirect('view_admin_list')
