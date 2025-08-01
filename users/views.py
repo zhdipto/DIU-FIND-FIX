@@ -373,7 +373,9 @@ def editStudentInfo(request, student_id):
         "student": student,
     }
     
-    return render(request, 'accounts/editStudent.html',context)
+    return render(request, 'accounts/editProfile.html',context)
+
+
 @login_required(login_url='login')
 def deleteStudent(request, student_id):
     user = request.user
@@ -404,3 +406,91 @@ def viewAdminList(request):
         "admin": employees,
     }
     return render(request, 'superAdmin/viewAdminList.html', context)
+
+@login_required(login_url='login')
+def editAdminInfo(request, employee_id):
+    user = request.user
+    if user.role != 3:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
+    admin = get_object_or_404(User, id=employee_id)
+    
+    if request.method == 'POST':
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        employee_id_input = request.POST.get('employee_id', '').strip()
+        birth_date = request.POST.get('birth_date', '').strip()
+        phone_number = request.POST.get('phone_number', '').strip
+        gender = request.POST.get('gender', '').strip()
+        profile_photo = request.FILES.get('profile_photo')
+        password = request.POST.get('password')  
+
+        errors = []
+        
+        # Validation
+        if name and not name.replace(" ", "").isalpha():
+            errors.append("Name must contain only letters.")
+        
+        if email and '@' not in email:
+            errors.append("Please enter a valid email address.")
+        
+        if phone_number:
+            if not phone_number.isdigit():
+                errors.append("Phone number must contain only digits.")
+            elif len(phone_number) < 10:
+                errors.append("Phone number must be at least 10 digits.")
+        
+        if gender and gender not in ['Male', 'Female']:
+            errors.append("Invalid gender selected.")
+        
+        # Check if email exists for other users
+        if email and User.objects.filter(email=email).exclude(id=student.id).exists():
+            errors.append("Email already exists for another user.")
+        
+        # Check if student_id exists for other users
+        if employee_id_input and User.objects.filter(employee_id=employee_id_input).exclude(id=admin.id).exists():
+            errors.append("Student ID already exists for another user.")
+        
+        if errors:
+            for error in errors:
+                messages.error(request, error)
+            return render(request, 'accounts/editStudent.html', {
+                'admin': admin,
+                'input_data': {
+                    'name': name,
+                    'email': email,
+                    'student_id': employee_id_input,
+                    'birth_date': birth_date,
+                    'phone_number': phone_number,
+                    'gender': gender,
+                }
+            })
+        
+        # Update student fields
+        if name:
+            admin.name = name
+        if email:
+            admin.email = email
+        if employee_id_input:
+            admin.student_id = employee_id_input
+        if birth_date:
+            admin.birth_date = birth_date
+        if phone_number:
+            admin.phone_number = phone_number
+        if gender:
+            admin.gender = gender
+        if profile_photo:
+            admin.profile_photo = profile_photo
+        if password:
+            admin.set_password(password)
+        
+        admin.save()
+        messages.success(request, 'Admin updated successfully.')
+        return redirect('edit_student_info', employee_id=admin.id)
+    context = {
+        "classActiveAdmin": "active",
+        "student": admin,
+    }
+    
+    return render(request, 'accounts/editProfile.html',context)

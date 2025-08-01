@@ -87,35 +87,48 @@
               <div class="form-group">
                 <label for="name" class="form-label">Full Name</label>
                 <input type="text" name="name" id="name" class="form-control" 
-                       value="{% if input_data.name %}{{ input_data.name }}{% else %}{{ student.name }}{% endif %}" 
+                       value="{{ student.name }}" 
                        required disabled/>
               </div>
 
+
               <div class="form-group">
+
+              {% if student.role == 1 %}
+
                 <label for="student_id" class="form-label">Student ID</label>
                 <input type="text" name="student_id" id="student_id" class="form-control" 
-                       value="{% if input_data.student_id %}{{ input_data.student_id }}{% else %}{{ student.student_id }}{% endif %}" 
+                       value="{{ student.student_id }}"" 
                        required disabled/>
+
+              {% else %}
+                <label for="employee_id" class="form-label">Employee ID</label>
+                <input type="text" name="employee_id" id="employee_id" class="form-control" 
+                       value="{{ student.employee_id }}"" 
+                       required disabled/>
+
+              {% endif %}
               </div>
+
 
               <div class="form-group">
                 <label for="email" class="form-label">Email</label>
                 <input type="email" name="email" id="email" class="form-control" 
-                       value="{% if input_data.email %}{{ input_data.email }}{% else %}{{ student.email }}{% endif %}" 
+                       value="{{ student.email }}" 
                        required disabled />
               </div>
 
               <div class="form-group">
                 <label for="phone" class="form-label">Phone Number</label>
                 <input type="text" name="phone_number" id="phone" class="form-control" 
-                       value="{% if input_data.phone_number %}{{ input_data.phone_number }}{% else %}{{ student.phone_number }}{% endif %}" 
+                       value="{{ student.phone_number }}" 
                        required disabled />
               </div>
 
               <div class="form-group">
                 <label for="birth_date">Date of Birth</label>
                 <input type="date" id="birth_date" class="form-control" name="birth_date" 
-                       value="{% if input_data.birth_date %}{{ input_data.birth_date }}{% else %}{{ student.birth_date|date:'Y-m-d' }}{% endif %}" 
+                       value="{{ student.birth_date|date:'Y-m-d' }}" 
                        disabled />
               </div>
 
