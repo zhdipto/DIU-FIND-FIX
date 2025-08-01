@@ -385,3 +385,22 @@ def deleteStudent(request, student_id):
     student.delete()
     messages.success(request, 'Student deleted successfully.')
     return redirect('view_student_list')
+
+@login_required(login_url='login')
+def viewAdminList(request):
+    user = request.user
+    if user.role != 3:  # Ensure the user is a Super Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    employee_id = request.GET.get('employee_id')
+    if employee_id:
+        employees = User.objects.filter(role=2, employee_id=employee_id).order_by('-date_joined')
+    else:
+        # If no specific employee ID is provided, show all employees
+        employees = User.objects.filter(role=2).order_by('-date_joined')
+    context = {
+        "classActiveAdmin": "active",
+        "admin": employees,
+    }
+    return render(request, 'superAdmin/viewAdminList.html', context)

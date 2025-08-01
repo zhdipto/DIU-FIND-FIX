@@ -1,0 +1,143 @@
+{% load static %}
+{% include "header.html" %}
+<link rel="stylesheet" href="{% static '/compiled/css/viewAllLostItem.css' %}" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<body>
+    <script src="{% static '/static/js/initTheme.js' %}"></script>
+    <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>All Admin List</h3>
+                <p class="text-subtitle text-muted">
+                  List of all admin who are registered in this system.
+                </p>
+              </div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  class="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="{% url 'super_admin_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Admin List
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section class="section">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">
+                    <a href="{% url 'create_admin' %}" class="btn btn-primary">+ Create Admin</a>
+                  </div>
+                  <div class="col-md-3">
+                    <form method="get" action="" class="mb-3">
+                        <div class="input-group">
+                            <input type="text" name="employee_id" class="form-control" placeholder="Search by Employee ID" value="{{ request.GET.employee_id }}">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 table table-striped" id="table1">
+                <thead class="table-light">
+                  <tr>
+                    <th>No</th>
+                    <th>Photo</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Employee ID</th>
+                    <th>Birthdate</th>
+                    <th>Phone Number</th>
+                    <th>Gender</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for admin in admin %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                      <img
+                        src="{% if admin.profile_photo %}{{ admin.profile_photo.url }}{% else %}{% static 'compiled/jpg/2.jpg' %}{% endif %}"
+                        alt="admin profile photo"
+                        class="item-image"
+                      />
+                    </td>
+                    <td>
+                      {{ admin.name }}
+                    </td>
+                    <td>
+                      {{ admin.email }}
+                    </td>
+                    <td>
+                      {{ admin.employee_id }}
+                    </td>
+                    <td>
+                      {{ admin.birth_date }}
+                    </td>
+                    <td>
+                      {{ admin.phone_number }}
+                    </td>
+                    <td>
+                      {{ admin.gender }}
+                    </td>
+                    <td>
+                      <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                      <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+    {% include "footer.html" %}
+<script>
+  $(document).ready(function () {
+    $('#table1').DataTable({
+      searching: false, // enable searching
+      "pageLength": 10,
+      "lengthChange": false, // remove "show X entries" dropdown
+      "ordering": true, // enable sorting
+      "language": {
+        "paginate": {
+          "previous": "&laquo;",
+          "next": "&raquo;"
+        }
+      }
+    });
+  });
+</script>
