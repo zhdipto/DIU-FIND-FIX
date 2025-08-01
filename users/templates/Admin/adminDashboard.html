@@ -1,0 +1,284 @@
+{% load static %}
+{% include "header.html" %}
+<body>
+  <script src="{% static 'js/initTheme.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+    <div class="page-heading">
+      <h3>Admin Dashboard</h3>
+    </div>
+    <div class="page-content">
+      <section class="row">
+        <div class="col-12 col-lg-9">
+          <div class="row">
+            <!-- Total Posts -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon purple mb-2">
+                        <i class="iconly-boldDocument"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">My Posts</h6>
+                      <h6 class="font-extrabold mb-0">12</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Approved Posts -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon green mb-2">
+                        <i class="iconly-boldTick-Square"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">Pending Posts</h6>
+                      <h6 class="font-extrabold mb-0">9</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Claims Submitted -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon blue mb-2">
+                        <i class="iconly-boldPaper-Plus"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">My Claims</h6>
+                      <h6 class="font-extrabold mb-0">3</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Issues Reported -->
+            <div class="col-6 col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body px-4 py-4-5">
+                  <div class="row">
+                    <div
+                      class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start"
+                    >
+                      <div class="stats-icon red mb-2">
+                        <i class="iconly-boldMessage"></i>
+                      </div>
+                    </div>
+                    <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
+                      <h6 class="text-muted font-semibold">My Reports</h6>
+                      <h6 class="font-extrabold mb-0">5</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- You can use this chart for post activity -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Posts (yearly)</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3" style="width: 600px; height: 300px;">
+                    <canvas id="postsPerMonthChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Reports (yearly)</h4>
+                </div>
+                <div class="card-body">
+                 <div class="row g-3" style="width: 600px; height: 300px;">
+                 <canvas id="reportsPerMonthChart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+        
+
+        <!-- Right side info -->
+        <div class="col-12 col-lg-3">
+          <!-- Profile Info -->
+          <a href="{% url 'view_profile' %}" class="card-link">
+            <div class="card">
+              <div class="card-body py-4 px-4">
+                <div class="d-flex align-items-center">
+                  <div class="avatar avatar-xl">
+                    <img src="{% if user.profile_photo %}
+                            {{ user.profile_photo.url }}
+                        {% else %}
+                            {% static 'compiled/jpg/2.jpg' %}
+                        {% endif %}" alt="Admin Image" />
+                  </div>
+                  <div class="ms-3 name">
+                    <h5 class="font-bold">{{ user.name }}</h5>
+                    <h6 class="text-muted mb-0">{{ user.employee_id }}</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Recent Claims -->
+          <div class="card">
+            <div class="card-content pb-4">
+              <div class="px-4">
+                <a href="{% url 'view_my_posts' %}" class="btn btn-block btn-xl btn-outline-primary font-bold mt-3">My Posts</a>
+              </div>
+            </div>
+            <div class="card-content pb-4">
+              <div class="px-4">
+                <a href="{% url 'view_my_reports' %}" class="btn btn-block btn-xl btn-outline-primary font-bold mt-3">My Reports</a>
+              </div>
+            </div>
+            <div class="card-content pb-4">
+              <div class="px-4">
+                <button
+                  class="btn btn-block btn-xl btn-outline-primary font-bold mt-3"
+                >
+                  My Claims
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+                  <h4>Posts activity</h4>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    <canvas id="postTypePieChart"></canvas>
+                  </div>
+                </div>
+            </div>
+      </section>
+    </div>
+{% include "footer.html" %}
+<script>
+const months = {{ months|safe }};
+const postCounts = {{ post_counts|safe }};
+
+const ctxBar = document.getElementById('postsPerMonthChart').getContext('2d');
+new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+        labels: months,
+        datasets: [{
+            label: 'Posts per Month',
+            data: postCounts,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                  stepSize: 1,       // Force step of 1
+                  precision: 0       // Ensure no decimal/fractional values
+              }
+          },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Pie Chart for Post Types
+const postTypeLabels = {{ post_type_labels|safe }};
+const postTypeCounts = {{ post_type_counts|safe }};
+
+const ctxPie = document.getElementById('postTypePieChart').getContext('2d');
+new Chart(ctxPie, {
+    type: 'pie',
+    data: {
+        labels: postTypeLabels,
+        datasets: [{
+            label: 'Post Types',
+            data: postTypeCounts,
+            backgroundColor: ['#f39c12', '#00c0ef'], // Adjust colors if needed
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+
+const reportsPerMonthCtx = document.getElementById('reportsPerMonthChart').getContext('2d');
+    new Chart(reportsPerMonthCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ report_month_labels|safe }},
+            datasets: [{
+                label: 'Reports per Month',
+                data: {{ report_month_data|safe }},
+                backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>

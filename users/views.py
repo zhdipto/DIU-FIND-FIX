@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from lostfound.models import Post
@@ -6,6 +6,8 @@ from reports.models import Report
 from .models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 
 # Create your views here.
 def home(request):
@@ -271,7 +273,7 @@ def createAdmin(request):
 @login_required(login_url='login')
 def viewStudentList(request):
     user = request.user
-    if user.role != 3:  # Ensure the user is a Super Admin
+    if user.role not in [2,3]:  # Ensure the user is a Super Admin
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
     
@@ -501,7 +503,67 @@ def deleteAdmin(request, employee_id):
     if user.role != 3:  # Ensure the user is a Super Admin
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
+    
     admin = get_object_or_404(User, id=employee_id)
     admin.delete()
     messages.success(request, 'Admin deleted successfully.')
     return redirect('view_admin_list')
+
+@login_required(login_url='login')
+def adminDashboard(request):
+    user = request.user
+    if user.role != 2:  # Ensure the user is an Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
+    # Bar Chart Data: Monthly Post Counts
+    monthly_posts = (
+        Post.objects
+        .annotate(month=TruncMonth('created_at'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    months = [entry['month'].strftime('%B') for entry in monthly_posts]  # E.g., ['January', 'February', ...]
+    post_counts = [entry['count'] for entry in monthly_posts]            # E.g., [5, 10, ...]
+
+    # Pie Chart Data: Post Type Distribution
+    type_counts = (
+        Post.objects
+        .values('post_type')
+        .annotate(count=Count('id'))
+    )
+
+    post_type_labels = [entry['post_type'].capitalize() for entry in type_counts]  # ['Lost', 'Found']
+    post_type_counts = [entry['count'] for entry in type_counts]
+
+    current_year = datetime.now().year
+    monthly_report_counts = (
+        Report.objects.filter(submitted_at__year=current_year)
+        .annotate(month=TruncMonth('submitted_at'))
+        .values('month')
+        .annotate(count=Count('id'))
+        .order_by('month')
+    )
+
+    # Prepare data for chart
+    report_month_labels = []
+    report_month_data = []
+
+    for month_data in monthly_report_counts:
+        month_name = month_data['month'].strftime('%B')  # e.g., "January"
+        report_month_labels.append(month_name)
+        report_month_data.append(month_data['count'])  
+
+    context = {
+        "classActiveDashboard": "active",
+        "user": user,
+        'months': months,
+        'post_counts': post_counts,
+        'post_type_labels': post_type_labels,
+        'post_type_counts': post_type_counts,
+        'report_month_labels': report_month_labels,
+        'report_month_data': report_month_data,
+    }
+    return render(request, 'Admin/adminDashboard.html', context)

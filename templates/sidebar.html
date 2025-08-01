@@ -81,7 +81,7 @@
               <li class="sidebar-title">Menu</li>
 
               <li class="sidebar-item {{ classActiveDashboard }}">
-                <a href="{% if request.user.role == 1 %}{% url 'student_dashboard' %}
+                <a href="{% if request.user.role == 1 %}{% url 'student_dashboard' %}{% elif request.user.role == 2 %}{% url 'admin_dashboard' %}
                 {% elif request.user.role == 3 %}{% url 'super_admin_dashboard' %}{% endif %}" class="sidebar-link">
                   <i class="bi bi-grid-fill"></i>
                   <span>Dashboard</span>

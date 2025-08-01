@@ -22,4 +22,5 @@ urlpatterns = [
     path('view-admin-list/', views.viewAdminList, name='view_admin_list'),
     path('edit-admin-info/<int:employee_id>/', views.editAdminInfo, name='edit_admin_info'),
     path('delete-admin/<int:employee_id>/', views.deleteAdmin, name='delete_admin'),
+    path('admin-dashboard/', views.adminDashboard, name='admin_dashboard'),
 ]
