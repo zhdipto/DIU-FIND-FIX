@@ -123,6 +123,194 @@
         background: white;
       }
 
+      .auth-hero {
+        background: #f2f7ff;
+        padding: 4rem 0;
+        position: relative;
+        overflow: hidden;
+        margin-top: 80px;
+      }
+
+      .auth-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+      }
+
+      .auth-container {
+        position: relative;
+        z-index: 2;
+      }
+
+      .auth-content {
+        text-align: center;
+        color: white;
+        max-width: 1200px;
+        margin: 0 auto;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .auth-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+        animation: bounce 2s infinite;
+      }
+
+      @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-10px);
+        }
+        60% {
+          transform: translateY(-5px);
+        }
+      }
+
+      .auth-title {
+        font-size: 3.3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        animation: fadeInUp 1s ease-out 0.2s both;
+      }
+
+      .auth-description {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0.95;
+        line-height: 1.6;
+        color: #051936ff;
+        animation: fadeInUp 1s ease-out 0.4s both;
+      }
+
+      .auth-buttons {
+        display: flex;
+        gap: 1.2rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2.5rem;
+        animation: fadeInUp 1s ease-out 0.6s both;
+      }
+
+      .auth-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        min-width: 180px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .auth-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s;
+      }
+
+      .auth-btn:hover::before {
+        left: 100%;
+      }
+
+      .auth-btn-login {
+        background: rgba(125, 23, 227, 0.91);
+        color: white;
+        justify-content: center;
+      }
+
+      .auth-btn-login:hover {
+        background: rgba(27, 7, 255, 1);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .auth-btn-register {
+        background: rgba(79, 76, 81, 1);
+        color: #ffffffff;
+        justify-content: center;
+      }
+
+      .auth-btn-register:hover {
+        background: rgba(27, 7, 255, 1);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(209, 174, 174, 1);
+      }
+
+      .btn-icon {
+        font-size: 1.3rem;
+      }
+
+      .btn-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.1rem;
+      }
+
+      .btn-text strong {
+        font-size: 1rem;
+      }
+
+      .btn-text small {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        font-weight: normal;
+      }
+
+      .auth-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        animation: fadeInUp 1s ease-out 0.8s both;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: white;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .stat-label {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 0.3rem;
+      }
+
+      .stat-divider {
+        width: 1px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.3);
+        display: none;
+      }
+
       .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -287,6 +475,31 @@
         .step::before {
           display: none;
         }
+
+        .auth-title {
+          font-size: 1.8rem;
+        }
+
+        .auth-description {
+          font-size: 1rem;
+        }
+
+        .auth-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .auth-btn {
+          min-width: 220px;
+        }
+
+        .auth-stats {
+          gap: 1rem;
+        }
+
+        .stat-divider {
+          display: block;
+        }
       }
     </style>
     <link rel="stylesheet" href="{% static 'compiled/css/app.css' %}" />
@@ -299,7 +512,7 @@
     <nav class="navbar">
       <div class="navbar-container">
         <div class="logo">
-          <a href="index.html"
+          <a href="{% url 'home' %}">"
             ><img
               src="{% static 'compiled/svg/logo.svg' %}"
               alt="Logo"
@@ -310,6 +523,35 @@
       </div>
     </nav>
 
+    <!-- Login Section (moved before features) -->
+    <section id="auth" class="auth-hero">
+      <div class="container">
+        <div class="auth-container">
+          <div class="auth-content">
+            <div class="auth-icon">🎓</div>
+            <h2 class="auth-title">Welcome to Our Community</h2>
+            <p class="auth-description"><strong>
+              Join thousands of DIU students helping each other find lost items and improve campus life. 
+              Your next helpful connection is just one click away! </strong>
+            </p>
+            <div class="auth-buttons">
+              <a href="{% url 'login' %}" class="auth-btn auth-btn-login">
+                <span class="btn-text">
+                  <strong>Login</strong>
+                </span>
+              </a>
+              <a href="{% url 'register' %}" class="auth-btn auth-btn-register">
+                <span class="btn-text">
+                  <strong>Register</strong>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section (moved after login) -->
     <section class="hero">
       <div class="container">
         <h1>How We Help Our University Community</h1>
@@ -339,24 +581,6 @@
               Report them here to help improve our university environment for
               everyone.
             </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="features">
-      <div class="container">
-        <div class="auth-section" style="margin-top: 40px; text-align: center">
-          <h2>Welcome to Our Community</h2>
-          <p>
-            If you already have an account, please log in. Otherwise, register
-            to get started!
-          </p>
-          <div style="margin-top: 20px">
-            <a href="{% url 'login' %}" class="btn btn-primary btn-lg" style="margin-right: 10px"
-              >Login</a
-            >
-            <a href="{% url 'register' %}" class="btn btn-secondary btn-lg">Register</a>
           </div>
         </div>
       </div>

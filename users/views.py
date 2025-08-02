@@ -13,12 +13,6 @@ from django.db.models.functions import TruncMonth
 def home(request):
     return render(request, 'home.html', {})
 
-# def login(request):
-#     return render(request, 'login/login.html', {})
-
-# def registration(request):
-#     return render(request, 'registration/registration.html', {})
-
 def register(request):
     if request.method == 'POST':
         student_name = request.POST.get('fullname')
@@ -91,11 +85,18 @@ def student_dashboard(request):
         return redirect('home')
     lost_posts = Post.objects.filter(post_type='Lost', is_visible=True).order_by('-created_at')[:3]
     found_posts = Post.objects.filter(post_type='Found', is_visible=True).order_by('-created_at')[:3]
+
+    my_posts = Post.objects.filter(user=student, is_visible=True).count()
+    my_reports = Report.objects.filter(user=student, is_visible=True).count()
+    pending_posts = Post.objects.filter(is_visible=False).count()
     context = {
         "student": student,
         "classActiveDashboard": "active",
         "lost_posts": lost_posts,
         "found_posts": found_posts,
+        "my_posts": my_posts,
+        "my_reports": my_reports,
+        "pending_posts": pending_posts,
     }
     return render(request, 'pages/studentDashboard.html', context)
 
