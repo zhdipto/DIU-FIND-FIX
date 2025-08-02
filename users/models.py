@@ -17,6 +17,13 @@ class User(AbstractUser):
     birth_date = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+    last_updated_by = models.ForeignKey(
+        'self',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='updated_users'
+    )
 
     def save(self, *args, **kwargs):
         if self.role == 1 and self.student_id:

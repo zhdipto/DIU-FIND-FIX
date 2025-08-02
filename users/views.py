@@ -114,7 +114,7 @@ def profile_edit(request):
     user = request.user
 
     if request.method == 'POST':
-        user_name = request.POST.get('user_name', '').strip()
+        user_name = request.POST.get('name', '').strip()
         phone_number = request.POST.get('phone_number', '').strip()
         birth_date = request.POST.get('birth_date', '').strip()
         gender = request.POST.get('gender', '').strip()
@@ -124,9 +124,6 @@ def profile_edit(request):
         errors = []
 
         # Validation
-        if user_name and not user_name.replace(" ", "").isalpha():
-            errors.append("Name must contain only letters.")
-
         if phone_number:
             if not phone_number.isdigit():
                 errors.append("Phone number must contain only digits.")
@@ -135,6 +132,9 @@ def profile_edit(request):
 
         if gender and gender not in ['Male', 'Female']:
             errors.append("Invalid gender selected.")
+
+        if password and len(password) < 8:
+            errors.append("Password must be at least 8 characters long.")
 
         if errors:
             for error in errors:
@@ -163,6 +163,7 @@ def profile_edit(request):
         if password:
             user.set_password(password)
 
+        user.last_updated_by = request.user
         user.save()
         messages.success(request, 'Profile updated successfully')
 
@@ -181,8 +182,6 @@ def logout_view(request):
 @login_required(login_url='login')
 def viewMyPosts(request):
     user = request.user
-    if posts.user != request.user:
-        return redirect('login')
     
     selected_post_type = request.GET.get('post_type')
 
@@ -300,6 +299,7 @@ def editStudentInfo(request, student_id):
         return redirect('home')
     
     student = get_object_or_404(User, id=student_id)
+
     
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
@@ -314,9 +314,6 @@ def editStudentInfo(request, student_id):
         errors = []
         
         # Validation
-        if name and not name.replace(" ", "").isalpha():
-            errors.append("Name must contain only letters.")
-        
         if email and '@' not in email:
             errors.append("Please enter a valid email address.")
         
@@ -340,7 +337,7 @@ def editStudentInfo(request, student_id):
         if errors:
             for error in errors:
                 messages.error(request, error)
-            return render(request, 'accounts/editStudent.html', {
+            return render(request, 'accounts/editProfile.html', {
                 'student': student,
                 'input_data': {
                     'name': name,
@@ -359,6 +356,7 @@ def editStudentInfo(request, student_id):
             student.email = email
         if student_id_input:
             student.student_id = student_id_input
+            student.username = student_id_input
         if birth_date:
             student.birth_date = birth_date
         if phone_number:
@@ -369,7 +367,8 @@ def editStudentInfo(request, student_id):
             student.profile_photo = profile_photo
         if password:
             student.set_password(password)
-        
+
+        student.last_updated_by = request.user
         student.save()
         messages.success(request, 'Student updated successfully.')
         return redirect('edit_student_info', student_id=student.id)
@@ -433,10 +432,7 @@ def editAdminInfo(request, employee_id):
 
         errors = []
         
-        # Validation
-        if name and not name.replace(" ", "").isalpha():
-            errors.append("Name must contain only letters.")
-        
+        # Validation        
         if email and '@' not in email:
             errors.append("Please enter a valid email address.")
         
@@ -489,7 +485,8 @@ def editAdminInfo(request, employee_id):
             admin.profile_photo = profile_photo
         if password:
             admin.set_password(password)
-        
+
+        admin.last_updated_by = request.user
         admin.save()
         messages.success(request, 'Admin updated successfully.')
         return redirect('edit_admin_info', employee_id=admin.id)

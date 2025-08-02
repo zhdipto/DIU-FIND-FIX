@@ -100,14 +100,14 @@
 
               <div class="form-group">
                 {% if user.role == 1 %}
-                <label for="student_id" class="form-label">Student ID</label>
-                <input type="text" name="student_id" id="student_id" class="form-control" value="{{ user.student_id }}" required disabled/>
+                <label for="user_name" class="form-label">Student ID</label>
+                <input type="text" name="user_name" id="user_name" class="form-control" value="{{ user.username }}" required disabled/>
                 {% elif user.role == 2 %}
-                <label for="employee_id" class="form-label">Employee ID</label>
-                <input type="text" name="employee_id" id="employee_id" class="form-control" value="{{ user.employee_id }}" required disabled/>
+                <label for="user_name" class="form-label">Employee ID</label>
+                <input type="text" name="user_name" id="user_name" class="form-control" value="{{ user.username }}" required disabled/>
                 {% elif user.role == 3 %}
-                <label for="super_admin_username" class="form-label">Super Admin Username</label>
-                <input type="text" name="super_admin_username" id="super_admin_username" class="form-control" value="{{ user.username }}" required disabled/>
+                <label for="user_name" class="form-label">Super Admin Username</label>
+                <input type="text" name="user_name" id="user_name" class="form-control" value="{{ user.username }}" required disabled/>
                 {% endif %}
               </div>
 
@@ -135,8 +135,8 @@
               <div class="form-group">
                 <label for="gender" class="form-label">Gender</label>
                 <select name="gender" id="gender" class="form-control" required disabled>
-                  <option value="Male" {% if input_data.gender == 'Male' or student.gender == 'Male' %}selected{% endif %}>Male</option>
-                  <option value="Female" {% if input_data.gender == 'Female' or student.gender == 'Female' %}selected{% endif %}>Female</option>
+                  <option value="Male" {% if input_data.gender == 'Male' or user.gender == 'Male' %}selected{% endif %}>Male</option>
+                  <option value="Female" {% if input_data.gender == 'Female' or user.gender == 'Female' %}selected{% endif %}>Female</option>
                 </select>
               </div>
 
@@ -178,7 +178,7 @@
         photoSection.style.display = "block";
         submitSection.style.display = "block";
         profileForm.querySelectorAll("input, select").forEach(input => { 
-        if (input.name !== 'email' && (input.name !== 'student_id' && input.name !== 'employee_id' && input.name !== 'super_admin_username')) {
+        if (input.name !== 'email' && input.name !== 'user_name') {
             input.disabled = false;
           }
         });
