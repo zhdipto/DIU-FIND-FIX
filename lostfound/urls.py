@@ -8,4 +8,6 @@ urlpatterns = [
     path('create-post/', views.createPost, name='create_post'),
     path('view-pending-post/', views.viewPendingPost, name='view_pending_post'),
     path('edit-post/<int:post_id>/', views.editPost, name='edit_post'),
+    path('delete-post/<int:post_id>/', views.deletePost, name='delete_post'),
+    path('approve-post/<int:post_id>/', views.approvePost, name='approve_post'),
 ]

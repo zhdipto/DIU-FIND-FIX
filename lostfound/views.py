@@ -1,5 +1,5 @@
 from pyexpat.errors import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Post
@@ -13,13 +13,13 @@ def viewFoundItem(request):
     if selected_location:
         found_posts = Post.objects.filter(
             post_type='found',
-            is_visible=False,
+            is_visible=True,
             location__iexact=selected_location
         ).order_by('-created_at')
     else:
         found_posts = Post.objects.filter(
             post_type='found',
-            is_visible=False
+            is_visible=True
         ).order_by('-created_at')
 
     context = {
@@ -37,13 +37,13 @@ def viewLostItem(request):
     if selected_location:
         lost_posts = Post.objects.filter(
             post_type='lost',
-            is_visible=False,
+            is_visible=True,
             location__iexact=selected_location
         ).order_by('-created_at')
     else:
         lost_posts = Post.objects.filter(
             post_type='lost',
-            is_visible=False
+            is_visible=True
         ).order_by('-created_at')
 
     context = {
@@ -115,11 +115,15 @@ def viewPendingPost(request):
 
 @login_required(login_url='login')
 def editPost(request, post_id):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
     post = Post.objects.get(id=post_id)
     if request.method == 'POST':
         post_type = request.POST.get('post_type')
         item_name = request.POST.get('itemName')
-        # studentId = request.POST.get('studentId')
         description = request.POST.get('description')
         location = request.POST.get('location')
         event_date = request.POST.get('date')
@@ -146,3 +150,27 @@ def editPost(request, post_id):
         "post": post
     }
     return render(request, 'post/editPost.html', context)
+
+@login_required(login_url='login')
+def deletePost(request, post_id):
+    user = request.user
+    if user.role != 2:  # Ensure the user is an Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    post = get_object_or_404(Post, id=post_id)
+    post.delete()
+    return redirect('view_pending_post')
+
+@login_required(login_url='login')
+def approvePost(request, post_id):
+    user = request.user
+    if user.role != 2:  # Ensure the user is an Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    post = get_object_or_404(Post, id=post_id)
+    post.is_visible = True
+    post.approved_by = user
+    post.save()
+    return redirect('view_pending_post')

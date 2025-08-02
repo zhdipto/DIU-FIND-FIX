@@ -204,8 +204,8 @@
                                         </div>
                                     </div>
                             <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
-                            <a href="#" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
-                            <a href="#" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
+                            <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                            <a href="{% url 'approve_post' post.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
 
                     </td>
                   </tr>

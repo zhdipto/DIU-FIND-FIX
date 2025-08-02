@@ -89,8 +89,8 @@ def student_dashboard(request):
     if student.role != 1:  # Ensure the user is a Student
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
-    lost_posts = Post.objects.filter(post_type='Lost').order_by('-created_at')[:3]
-    found_posts = Post.objects.filter(post_type='Found').order_by('-created_at')[:3]
+    lost_posts = Post.objects.filter(post_type='Lost', is_visible=True).order_by('-created_at')[:3]
+    found_posts = Post.objects.filter(post_type='Found', is_visible=True).order_by('-created_at')[:3]
     context = {
         "student": student,
         "classActiveDashboard": "active",
@@ -518,7 +518,7 @@ def adminDashboard(request):
     
     # Bar Chart Data: Monthly Post Counts
     monthly_posts = (
-        Post.objects
+        Post.objects.filter(is_visible=True)
         .annotate(month=TruncMonth('event_date'))
         .values('month')
         .annotate(count=Count('id'))
@@ -530,7 +530,7 @@ def adminDashboard(request):
 
     # Pie Chart Data: Post Type Distribution
     type_counts = (
-        Post.objects
+        Post.objects.filter(is_visible=True)
         .values('post_type')
         .annotate(count=Count('id'))
     )
@@ -540,7 +540,7 @@ def adminDashboard(request):
 
     current_year = datetime.now().year
     monthly_report_counts = (
-        Report.objects.filter(event_date__year=current_year)
+        Report.objects.filter(is_visible=True,event_date__year=current_year)
         .annotate(month=TruncMonth('event_date'))
         .values('month')
         .annotate(count=Count('id'))
@@ -556,6 +556,11 @@ def adminDashboard(request):
         report_month_labels.append(month_name)
         report_month_data.append(month_data['count'])  
 
+    
+    approved_posts = Post.objects.filter(is_visible=True,approved_by_id=user).count()
+    pending_posts = Post.objects.filter(is_visible=False).count()
+    pending_reports = Report.objects.filter(is_visible=False).count()
+
     context = {
         "classActiveDashboard": "active",
         "user": user,
@@ -565,5 +570,8 @@ def adminDashboard(request):
         'post_type_counts': post_type_counts,
         'report_month_labels': report_month_labels,
         'report_month_data': report_month_data,
+        'approved_posts': approved_posts,
+        'pending_posts': pending_posts,
+        'pending_reports': pending_reports,
     }
     return render(request, 'Admin/adminDashboard.html', context)

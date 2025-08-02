@@ -23,6 +23,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='approved_posts')
     last_updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='last_updated_posts')
 
     def __str__(self):
