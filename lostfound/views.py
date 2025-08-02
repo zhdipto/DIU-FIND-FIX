@@ -107,6 +107,7 @@ def viewPendingPost(request):
         posts = Post.objects.filter(is_visible=False, post_type='found').order_by('-created_at')
 
     context = {
+        "classActiveViewAllItem": "active",
         "classActiveViewPendingPost": "active",
         "posts": posts,
     }

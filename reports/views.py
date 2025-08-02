@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.utils import timezone
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
@@ -60,3 +61,18 @@ def submitReport(request):
         "user": user,
     }
     return render(request, 'submitReport/createReport.html', context)
+
+@login_required(login_url='loginCheck')
+def viewPendingReports(request):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to view this page.")
+        return redirect('home')
+    
+    report = Report.objects.filter(is_visible=False).order_by('-submitted_at')
+    context = {
+        "classActiveReports": "active",
+        "classActiveViewPendingReports": "active",
+        "reports": report,
+    }
+    return render(request, 'pendingReport/viewPendingReport.html', context)

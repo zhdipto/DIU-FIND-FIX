@@ -146,6 +146,14 @@
                       >Submit Report</a
                     >
                   </li>
+
+                  {% if request.user.role == 2 %}
+                  <li class="submenu-item {{ classActiveViewPendingReports }}">
+                    <a href="{% url 'view_pending_report' %}" class="submenu-link"
+                      >Pending Report</a
+                    >
+                  </li>
+                  {% endif %}
                 </ul>
               </li>
 
