@@ -1,0 +1,262 @@
+{% load static %}
+{% include "header.html" %}
+<body>
+    <script src="{% static 'js/initTheme.js' %}"></script>
+    <div id="app">
+    {% include "sidebar.html" %}
+
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last"></div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  class="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                    <a href="{% if user.role == 1 %}{% url 'student_dashboard' %}{% elif user.role == 2 %}{% url 'admin_dashboard' %}{% endif %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Edit Report
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section class="section">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Edit Report</h4>
+                <p class="text-subtitle text-muted">
+                    You can edit the details of your report here. Please ensure all
+                    information is accurate before submitting.
+                </p>
+              </div>
+              <div class="card-body">
+                <div
+                  id="successAlert"
+                  class="alert alert-success alert-dismissible fade"
+                  role="alert"
+                  style="display: none"
+                >
+                  <i class="bi bi-check-circle-fill"></i> Your issue report has
+                  been submitted successfully!
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                  ></button>
+                </div>
+
+                <form id="issueReportForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                  <div class="row">
+                    <!-- Student ID -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        {% if user.role == 1 %}
+                        <label for="studentId"
+                          >Student ID <span class="text-danger">*</span></label
+                        >
+                        {% elif user.role == 2 %}
+                        <label for="employeeId"
+                          >Employee ID</label
+                        >
+                        {% endif %}
+                        <input
+                          type="text"
+                          id="studentId"
+                          class="form-control"
+                          name="studentId"
+                          placeholder="{{user.username}}"
+                          disabled
+                        />
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="location"
+                          >Location <span class="text-danger">*</span></label
+                        >
+                        <select
+                          id="location"
+                          class="form-select"
+                          name="location"
+                        >
+                          <option value="">Select Location</option>
+                            <option value="library" {% if input_data.location == 'library' or report.location == 'library' %}selected{% endif %}>Library</option>
+                            <option value="cafeteria" {% if input_data.location == 'cafeteria' or report.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
+                            <option value="classroom-a" {% if input_data.location == 'classroom-a' or report.location == 'classroom-a' %}selected{% endif %}>Classroom Block A</option>
+                            <option value="classroom-b" {% if input_data.location == 'classroom-b' or report.location == 'classroom-b' %}selected{% endif %}>Classroom Block B</option>
+                            <option value="classroom-c" {% if input_data.location == 'classroom-c' or report.location == 'classroom-c' %}selected{% endif %}>Classroom Block C</option>
+                            <option value="laboratory" {% if input_data.location == 'laboratory' or report.location == 'laboratory' %}selected{% endif %}>Laboratory</option>
+                            <option value="gymnasium" {% if input_data.location == 'gymnasium' or report.location == 'gymnasium' %}selected{% endif %}>Gymnasium</option>
+                            <option value="dormitory" {% if input_data.location == 'dormitory' or report.location == 'dormitory' %}selected{% endif %}>Dormitory</option>
+                            <option value="parking" {% if input_data.location == 'parking' or report.location == 'parking' %}selected{% endif %}>Parking Area</option>
+                            <option value="admin-office" {% if input_data.location == 'admin-office' or report.location == 'admin-office' %}selected{% endif %}>Administrative Office</option>
+                            <option value="auditorium" {% if input_data.location == 'auditorium' or report.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
+                            <option value="other" {% if input_data.location == 'other' or post.location == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Date -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="issueDate"
+                          >Date of Issue
+                          <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="date"
+                          id="issueDate"
+                          class="form-control"
+                          name="issueDate"
+                          value="{{ report.event_date|date:'Y-m-d' }}"
+                        />
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+
+                    <!-- Time -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="issueTime"
+                          >Time of Issue
+                          <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="time"
+                          id="issueTime"
+                          class="form-control"
+                          name="issueTime"
+                          value="{{ report.event_time|date:'H:i' }}"
+                        />
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Issue Category -->
+                  <div class="form-group">
+                    <label for="issueCategory"
+                      >Issue Category <span class="text-danger">*</span></label
+                    >
+                    <select
+                      id="issueCategory"
+                      class="form-select"
+                      name="issueCategory"
+                      required
+                    >
+                      <option value="">Select Issue Type</option>
+                        <option value="facility" {% if input_data.category == 'facility' or report.category == 'facility' %}selected{% endif %}>Facility Issue</option>
+                        <option value="safety" {% if input_data.category == 'safety' or report.category == 'safety' %}selected{% endif %}>Safety Concern</option>
+                        <option value="harassment" {% if input_data.category == 'harassment' or report.category == 'harassment' %}selected{% endif %}>Harassment/Bullying</option>
+                        <option value="academic" {% if input_data.category == 'academic' or report.category == 'academic' %}selected{% endif %}>Academic Issue</option>
+                        <option value="technology" {% if input_data.category == 'technology' or report.category == 'technology' %}selected{% endif %}>Technology Problem</option>
+                        <option value="food-service" {% if input_data.category == 'food-service' or report.category == 'food-service' %}selected{% endif %}>Food Service Issue</option>
+                        <option value="maintenance" {% if input_data.category == 'maintenance' or report.category == 'maintenance' %}selected{% endif %}>Maintenance Request</option>
+                        <option value="security" {% if input_data.category == 'security' or report.category == 'security' %}selected{% endif %}>Security Concern</option>
+                        <option value="other" {% if input_data.category == 'other' or report.category == 'other' %}selected{% endif %}>Other</option>
+                    </select>
+                    <div class="invalid-feedback"></div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="form-group">
+                    <label for="description"
+                      >Issue Description
+                      <span class="text-danger">*</span></label
+                    >
+                    <textarea
+                      id="description"
+                      class="form-control"
+                      name="description"
+                      rows="5"
+                      placeholder="Please provide a detailed description of the issue, including what happened, when it occurred, and any other relevant information..."
+                    >{{ report.description }}</textarea>
+                    <small class="text-muted">
+                      <span id="charCount">0</span>/1000 characters
+                    </small>
+                    <div class="invalid-feedback"></div>
+                  </div>
+
+                  <!-- Photo Upload -->
+                  <div class="form-group">
+                    <label for="photo">Supporting Photo (Optional)</label>
+                    <input
+                      type="file"
+                      id="photo"
+                      class="form-control"
+                      name="photo"
+                      accept="image/*"
+                    />
+                    <small class="text-muted"
+                      >Accepted formats: PNG, JPG, GIF (Max size: 5MB)</small
+                    >
+                    <!-- Show current photo if exists -->
+                    {% if report.photo %}
+                    <div class="mt-2">
+                    <p class="text-muted">Current photo:</p>
+                    <img
+                        src="{{ report.photo.url }}"
+                        alt="Current Item Photo"
+                        style="max-width: 200px; max-height: 200px;"
+                        class="img-thumbnail"
+                    />
+                    </div>
+                    {% endif %}
+                    <!-- Preview for new photo -->
+                    <div class="mt-2">
+                      <img
+                        id="photoPreview"
+                        style="
+                          max-width: 200px;
+                          max-height: 200px;
+                          display: none;
+                        "
+                        class="img-thumbnail"
+                      />
+                    </div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+
+                  <!-- Submit Buttons -->
+                  <div class="form-group">
+                    <div class="d-flex gap-2">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send"></i> Save changes
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="resetBtn"
+                      >
+                        <i class="bi bi-arrow-clockwise"></i> Reset Form
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </div>
+
+
+{% include "footer.html" %}

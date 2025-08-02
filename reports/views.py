@@ -76,3 +76,31 @@ def viewPendingReports(request):
         "reports": report,
     }
     return render(request, 'pendingReport/viewPendingReport.html', context)
+
+@login_required(login_url='loginCheck')
+def editReport(request, report_id):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to edit this report.")
+        return redirect('home')
+    
+    report = Report.objects.get(id=report_id)
+    if request.method == 'POST':
+        report.category = request.POST.get('issueCategory')
+        report.description = request.POST.get('description')
+        report.location = request.POST.get('location')
+        report.event_date = request.POST.get('issueDate')
+        report.event_time = request.POST.get('issueTime')
+        
+        if 'photo' in request.FILES:
+            report.photo = request.FILES['photo']
+        
+        report.last_updated_by = user
+        report.save()
+        return redirect('edit_report', report_id=report.id)
+
+    context = {
+        "classActiveReports": "active",
+        "report": report,
+    }
+    return render(request, 'submitReport/editReport.html', context)

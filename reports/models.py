@@ -18,7 +18,8 @@ class Report(models.Model):
     status = models.BooleanField(default=False)
 
     is_visible = models.BooleanField(default=False)
-    approved_by = models.CharField(max_length=100, blank=True, null=True)
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='approved_reports')
+    last_updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='last_updated_reports')
 
     submitted_at = models.DateTimeField(auto_now_add=True)
 
