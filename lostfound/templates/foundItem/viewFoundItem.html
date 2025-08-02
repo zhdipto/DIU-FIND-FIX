@@ -80,7 +80,7 @@
                     <th>Item Name</th>
                     <th>Location</th>
                     <th>Description</th>
-                    <th>Date/Time Lost</th>
+                    <th>Date/Time Found</th>
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -196,6 +196,10 @@
                                         </div>
                                     </div>
 
+                          {% if user.role == 2 %}
+                              <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
+                              <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                          {% endif %}
                     </td>
                   </tr>
                   {% endfor %}

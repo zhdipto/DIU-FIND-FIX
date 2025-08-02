@@ -83,6 +83,9 @@
                     <th>Description</th>
                     <th>Date/Time</th>
                     <th>Status</th>
+                    {% if user.role == 2 %}
+                    <th>Action</th>
+                    {% endif %}
                   </tr>
                 </thead>
                 <tbody>
@@ -158,6 +161,12 @@
                         {% endif %}
                       </span>
                     </td>
+                    {% if user.role == 2 %}
+                    <td>
+                          <a href="{% url 'edit_report' report.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
+                          <a href="{% url 'delete_report' report.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                    </td>
+                    {% endif %}
                   </tr>
                   </tbody>
                   {% endfor %}
