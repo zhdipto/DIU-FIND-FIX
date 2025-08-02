@@ -1,6 +1,16 @@
 {% load static %}
 {% include "header.html" %}
 <link rel="stylesheet" href="{% static '/compiled/css/viewAllLostItem.css' %}" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 <body>
     <script src="{% static '/static/js/initTheme.js' %}"></script>
     <div id="app">
@@ -195,3 +205,20 @@
           </section>
         </div>
     {% include "footer.html" %}
+
+<script>
+  $(document).ready(function () {
+    $('#table1').DataTable({
+      searching: false, // enable searching
+      "pageLength": 5,
+      "lengthChange": false, // remove "show X entries" dropdown
+      "ordering": true, // enable sorting
+      "language": {
+        "paginate": {
+          "previous": "&laquo;",
+          "next": "&raquo;"
+        }
+      }
+    });
+  });
+</script>

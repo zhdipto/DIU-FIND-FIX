@@ -64,9 +64,15 @@
                     <!-- Student ID -->
                     <div class="col-md-6 col-12">
                       <div class="form-group">
+                        {% if user.role == 1 %}
                         <label for="studentId"
                           >Student ID <span class="text-danger">*</span></label
                         >
+                        {% elif user.role == 2 %}
+                        <label for="employeeId"
+                          >Employee ID</label
+                        >
+                        {% endif %}
                         <input
                           type="text"
                           id="studentId"
