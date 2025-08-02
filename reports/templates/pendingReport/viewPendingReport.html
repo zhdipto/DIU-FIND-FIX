@@ -143,8 +143,8 @@
                     </td>
                     <td>
                             <a href="{% url 'edit_report' report.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
-                            <a href="#" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
-                            <a href="#" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
+                            <a href="{% url 'delete_report' report.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                            <a href="{% url 'approve_report' report.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
                     </td>
                   </tr>
                   {% endfor %}

@@ -1,6 +1,6 @@
 from pyexpat.errors import messages
 from django.utils import timezone
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 
 from reports.models import Report
@@ -12,12 +12,12 @@ def viewAllReports(request):
     selected_location = request.GET.get('location') 
     if selected_location:
         report = Report.objects.filter(
-            is_visible=False,
+            is_visible=True,
             location__iexact=selected_location
         ).order_by('-submitted_at')
     else:
         report = Report.objects.filter(
-            is_visible=False
+            is_visible=True
         ).order_by('-submitted_at')
     context = {
         "classActiveReports": "active",
@@ -104,3 +104,29 @@ def editReport(request, report_id):
         "report": report,
     }
     return render(request, 'submitReport/editReport.html', context)
+
+@login_required(login_url='loginCheck')
+def deleteReport(request, report_id):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to delete this report.")
+        return redirect('home')
+
+    report = get_object_or_404(Report, id=report_id)
+    report.delete()
+    # messages.success(request, "Report deleted successfully.")
+    return redirect('view_pending_report')
+
+@login_required(login_url='loginCheck')
+def approveReport(request, report_id):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to approve this report.")
+        return redirect('home')
+
+    report = get_object_or_404(Report, id=report_id)
+    report.is_visible = True
+    report.approved_by = user
+    report.save()
+    # messages.success(request, "Report approved successfully.")
+    return redirect('view_pending_report')
