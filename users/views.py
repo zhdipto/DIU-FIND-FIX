@@ -519,7 +519,7 @@ def adminDashboard(request):
     # Bar Chart Data: Monthly Post Counts
     monthly_posts = (
         Post.objects
-        .annotate(month=TruncMonth('created_at'))
+        .annotate(month=TruncMonth('event_date'))
         .values('month')
         .annotate(count=Count('id'))
         .order_by('month')
@@ -540,8 +540,8 @@ def adminDashboard(request):
 
     current_year = datetime.now().year
     monthly_report_counts = (
-        Report.objects.filter(submitted_at__year=current_year)
-        .annotate(month=TruncMonth('submitted_at'))
+        Report.objects.filter(event_date__year=current_year)
+        .annotate(month=TruncMonth('event_date'))
         .values('month')
         .annotate(count=Count('id'))
         .order_by('month')

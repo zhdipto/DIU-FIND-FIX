@@ -23,6 +23,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
     is_visible = models.BooleanField(default=False)
+    last_updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='last_updated_posts')
 
     def __str__(self):
         return f"{self.post_type.title()} post by {self.user.username} at {self.location}"

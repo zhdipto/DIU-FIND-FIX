@@ -1,0 +1,224 @@
+{% load static %}
+{% include "header.html" %}
+<body>
+    <script src="{% static 'js/initTheme.js' %}"></script>
+    <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last"></div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  class="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="{% if user.role == 1 %}{% url 'student_dashboard' %}{% elif user.role == 2 %}{% url 'admin_dashboard' %}{% endif %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Edit Post
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section class="section">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="card-title">Post Lost or Found Item</h4>
+                <p class="text-subtitle text-muted">
+                  Please fill in all fields to report a lost or found item.
+                </p>
+              </div>
+              <div class="card-body">
+                <form id="lostFoundForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                  <div class="row">
+                    <!-- Post Type -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="post_type"
+                          >Post Type <span class="text-danger">*</span></label
+                        >
+                        <select
+                          id="post_type"
+                          name="post_type"
+                          class="form-select"
+                        >
+                          <option value="">Select Type</option>
+                        <option value="lost" {% if input_data.post_type == 'lost' or post.post_type == 'lost' %}selected{% endif %}>Lost Item</option>
+                        <option value="found" {% if input_data.post_type == 'found' or post.post_type == 'found' %}selected{% endif %}>Found Item</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Item Name -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="itemName"
+                          >Item Name <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="text"
+                          id="itemName"
+                          name="itemName"
+                          class="form-control"
+                          value="{{ post.item_name }}"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Student ID -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="studentId"
+                          >Student ID</label
+                        >
+                        <input
+                          type="text"
+                          id="studentId"
+                          name="studentId"
+                          class="form-control"
+                          value="{{post.user.username}}"
+                        />
+                      </div>
+                    </div>
+                    <!-- Location -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="location"
+                          >Location <span class="text-danger">*</span></label
+                        >
+                        <select id="location" class="form-select" name="location">
+                            <option value="">Select Location</option>
+                            <option value="library" {% if input_data.location == 'library' or post.location == 'library' %}selected{% endif %}>Library</option>
+                            <option value="cafeteria" {% if input_data.location == 'cafeteria' or post.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
+                            <option value="Knowledge Tower" {% if input_data.location == 'Knowledge Tower' or post.location == 'Knowledge Tower' %}selected{% endif %}>Knowledge Tower</option>
+                            <option value="classroom-b" {% if input_data.location == 'classroom-b' or post.location == 'classroom-b' %}selected{% endif %}>Classroom Block B</option>
+                            <option value="classroom-c" {% if input_data.location == 'classroom-c' or post.location == 'classroom-c' %}selected{% endif %}>Classroom Block C</option>
+                            <option value="laboratory" {% if input_data.location == 'laboratory' or post.location == 'laboratory' %}selected{% endif %}>Laboratory</option>
+                            <option value="gymnasium" {% if input_data.location == 'gymnasium' or post.location == 'gymnasium' %}selected{% endif %}>Gymnasium</option>
+                            <option value="dormitory" {% if input_data.location == 'dormitory' or post.location == 'dormitory' %}selected{% endif %}>Dormitory</option>
+                            <option value="parking" {% if input_data.location == 'parking' or post.location == 'parking' %}selected{% endif %}>Parking Area</option>
+                            <option value="admin-office" {% if input_data.location == 'admin-office' or post.location == 'admin-office' %}selected{% endif %}>Administrative Office</option>
+                            <option value="auditorium" {% if input_data.location == 'auditorium' or post.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
+                            <option value="other" {% if input_data.location == 'other' or post.location == 'other' %}selected{% endif %}>Other</option>
+                            </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <!-- Date -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="date"
+                          >Date <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="date"
+                          id="date"
+                          name="date"
+                          class="form-control"
+                          value="{{ post.event_date|date:'Y-m-d' }}"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Time -->
+                    <div class="col-md-6 col-12">
+                      <div class="form-group">
+                        <label for="time"
+                          >Time <span class="text-danger">*</span></label
+                        >
+                        <input
+                          type="time"
+                          id="time"
+                          name="time"
+                          class="form-control"
+                          value="{{post.event_time|date:'H:i'}}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="form-group">
+                    <label for="description"
+                      >Description <span class="text-danger">*</span></label
+                    >
+                    <textarea
+                      id="description"
+                      name="description"
+                      rows="4"
+                      class="form-control"
+                    >{{ post.description }}</textarea>
+                  </div>
+
+                  <!-- Photo Upload -->
+                   <div class="form-group">
+                    <label for="photo">Item Photo</label>
+                    <input
+                      type="file"
+                      id="photo"
+                      class="form-control"
+                      name="photo"
+                      accept="image/*"
+                    />
+                    <small class="text-muted"
+                      >Accepted formats: PNG, JPG, GIF (Max size: 5MB)</small
+                    >
+                    <!-- Show current photo if exists -->
+                    {% if post.photo %}
+                    <div class="mt-2">
+                    <p class="text-muted">Current photo:</p>
+                    <img
+                        src="{{ post.photo.url }}"
+                        alt="Current Item Photo"
+                        style="max-width: 200px; max-height: 200px;"
+                        class="img-thumbnail"
+                    />
+                    </div>
+                    {% endif %}
+                     <!-- Preview for new photo -->
+                    <div class="mt-2">
+                    <img
+                        src=""
+                        alt="New Photo Preview"
+                        id="photoPreview"
+                        style="max-width: 200px; max-height: 200px; display: none;"
+                        class="img-thumbnail"
+                    />
+                    </div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+
+                  <!-- Submit Buttons -->
+                  <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-send"></i> Submit Post
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                      <i class="bi bi-arrow-clockwise"></i> Reset Form
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+        </div>
+
+{% include "footer.html" %}

@@ -112,3 +112,37 @@ def viewPendingPost(request):
         "posts": posts,
     }
     return render(request, 'post/viewPendingPost.html', context)
+
+@login_required(login_url='login')
+def editPost(request, post_id):
+    post = Post.objects.get(id=post_id)
+    if request.method == 'POST':
+        post_type = request.POST.get('post_type')
+        item_name = request.POST.get('itemName')
+        # studentId = request.POST.get('studentId')
+        description = request.POST.get('description')
+        location = request.POST.get('location')
+        event_date = request.POST.get('date')
+        event_time = request.POST.get('time')
+        photo = request.FILES.get('photo')
+
+        # Update the post
+        if post_type not in ['lost', 'found']:
+            messages.error(request, 'Invalid post type selected.')
+            return redirect('edit_post', post_id=post.id)
+        post.item_name = item_name
+        post.description = description
+        post.location = location
+        post.event_date = event_date
+        post.event_time = event_time
+        post.post_type = post_type
+        if photo:
+            post.photo = photo
+        post.last_updated_by = request.user
+        post.save()
+        return redirect('edit_post', post_id=post.id)
+    context = {
+        "classActiveCreatePost": "active",
+        "post": post
+    }
+    return render(request, 'post/editPost.html', context)
