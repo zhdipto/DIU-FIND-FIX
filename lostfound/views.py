@@ -1,3 +1,4 @@
+from pyexpat.errors import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -92,3 +93,21 @@ def createPost(request):
     }
     return render(request, 'post/createPost.html', context)
 
+@login_required(login_url='login')
+def viewPendingPost(request):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    selected_post_type = request.GET.get('post_type')
+
+    if selected_post_type == 'lost':
+        posts = Post.objects.filter(is_visible=False, post_type='lost').order_by('-created_at')
+    else:
+        posts = Post.objects.filter(is_visible=False, post_type='found').order_by('-created_at')
+
+    context = {
+        "classActiveViewPendingPost": "active",
+        "posts": posts,
+    }
+    return render(request, 'post/viewPendingPost.html', context)

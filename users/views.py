@@ -181,6 +181,9 @@ def logout_view(request):
 @login_required(login_url='login')
 def viewMyPosts(request):
     user = request.user
+    if posts.user != request.user:
+        return redirect('login')
+    
     selected_post_type = request.GET.get('post_type')
 
     if selected_post_type == 'lost':

@@ -108,6 +108,14 @@
                       >Found Items</a
                     >
                   </li>
+
+                  {% if request.user.role == 2 %}
+                  <li class="submenu-item {{ classActiveViewPendingPost }}">
+                    <a href="{% url 'view_pending_post' %}" class="submenu-link"
+                      >Pending Post</a
+                    >
+                  </li>
+                  {% endif %}
                 </ul>
               </li>
 
