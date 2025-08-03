@@ -1,0 +1,234 @@
+{% load static %}
+{% include "header.html" %}
+<link rel="stylesheet" href="{% static '/compiled/css/viewAllLostItem.css' %}" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<body>
+    <script src="{% static '/static/js/initTheme.js' %}"></script>
+    <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>All Pending Post List</h3>
+                <p class="text-subtitle text-muted">
+                  All posts that are currently pending approval will be listed here.
+                </p>
+              </div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  class="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      Pending Posts
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section class="section">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-md-6"></div>
+                  <div class="col-md-3">
+                    <p class="bg-primary text-white fw-bold text-center rounded-pill shadow-sm p-2">
+                        Select post type to see pending posts 👉
+                    </p>
+                </div>
+                  <div class="col-md-3">
+                    <form method="get" id="post-filter-form">
+                        <select class="form-select" name="post_type" onchange="document.getElementById('post-filter-form').submit();">
+                          <option value="">Post Type</option>
+                          <option value="lost" {% if request.GET.post_type == 'lost' %}selected{% endif %}>Lost</option>
+                          <option value="found" {% if request.GET.post_type == 'found' %}selected{% endif %}>Found</option>
+                        </select>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 table table-striped" id="table1">
+                <thead class="table-light">
+                  <tr>
+                    <th>No</th>
+                    <th>Photo</th>
+                    <th>Item Name</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Date/Time Lost</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for post in posts %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                      <img
+                        src="{{ post.photo.url }}"
+                        alt="lost item image"
+                        class="item-image"
+                      />
+                    </td>
+                    <td>
+                      <div class="fw-bold">{{ post.item_name }}</div>
+                      <small class="text-muted">{{ post.student.username }}</small>
+                    </td>
+                    <td>
+                      <i class="bi bi-geo-alt-fill text-danger"></i>
+                      {{ post.location }}
+                    </td>
+                    <td>
+                      <div class="me-1 mb-1 d-inline-block">
+                                <!-- Button trigger for full size modal -->
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    data-bs-target="#full-scrn-{{ post.id }}">
+                                    See details
+                                </button>
+
+                                <!-- full size modal-->
+                                <div class="modal fade text-left w-100" id="full-scrn-{{ post.id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="myModalLabel20" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full"
+                                        role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel20">Item details</h4>
+                                                <button type="button" class="close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <i data-feather="x"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Large image -->
+                                                <div class="text-center mb-4">
+                                                    <img src="{{ post.photo.url }}"
+                                                        alt="Item Image" class="img-fluid rounded" style="max-height: 400px;">
+                                                </div>
+
+                                                <!-- Description -->
+                                                <p class="fs-5 text-muted">
+                                                    {{ post.description }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                    <td>
+                      <div>{{ post.event_date }}</div>
+                      <small class="text-muted">{{ post.event_time }}</small>
+                    </td>
+                    <td>
+                      {% comment %} <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
+                        {% if post.status %}
+                          Claimed
+                        {% else %}
+                          Unclaimed
+                        {% endif %}
+                      </span> {% endcomment %}
+
+                      <span class="badge {% if post.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {% if post.is_visible %}
+                          Approved
+                        {% else %}
+                          Pending
+                        {% endif %}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="col-12">
+                                    <div class="modal-primary me-1 mb-1 d-inline-block">
+                                        <!-- Button trigger for primary themes modal -->
+                                        <button type="button" class="btn icon btn-lg btn-info" data-bs-toggle="modal"
+                                            data-bs-target="#primary-{{ post.id }}">
+                                            <i class="bi bi-info-circle"></i>
+                                        </button>
+
+                                        <!--primary theme Modal -->
+                                        <div class="modal fade text-left" id="primary-{{ post.id }}" tabindex="-1" role="dialog"
+                                            aria-labelledby="myModalLabel160" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header bg-primary">
+                                                        <h5 class="modal-title white" id="myModalLabel160"> Post ID#{{ post.id }}
+                                                        </h5>
+                                                        <button type="button" class="close" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                            <i data-feather="x"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>
+                                                            If you lost this item, please visit the University Control Room with proper identification to recover it.
+                                                        </p>
+                                                        <hr />
+                                                        <h6 class="text-primary mb-1">📞 Contact Control Room</h6>
+                                                        <ul class="list-unstyled">
+                                                            <li><strong>Location:</strong> Ground Floor, Main Building</li>
+                                                            <li><strong>Phone:</strong> +8801XXXXXXXXX</li>
+                                                            <li><strong>Email:</strong> controlroom@diu.edu.bd</li>
+                                                            <li><strong>Hours:</strong> 9:00 AM – 5:00 PM (Sun–Thu)</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                            <a href="{% url 'approve_post' post.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
+
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+    {% include "footer.html" %}
+<script>
+  $(document).ready(function () {
+    $('#table1').DataTable({
+      searching: false, // enable searching
+      "pageLength": 5,
+      "lengthChange": false, // remove "show X entries" dropdown
+      "ordering": true, // enable sorting
+      "language": {
+        "paginate": {
+          "previous": "&laquo;",
+          "next": "&raquo;"
+        }
+      }
+    });
+  });
+</script>

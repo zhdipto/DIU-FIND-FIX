@@ -100,10 +100,11 @@ def viewPendingPost(request):
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
     selected_post_type = request.GET.get('post_type')
+    posts = Post.objects.none()
 
     if selected_post_type == 'lost':
         posts = Post.objects.filter(is_visible=False, post_type='lost').order_by('-created_at')
-    else:
+    elif selected_post_type == 'found':
         posts = Post.objects.filter(is_visible=False, post_type='found').order_by('-created_at')
 
     context = {
@@ -174,3 +175,25 @@ def approvePost(request, post_id):
     post.approved_by = user
     post.save()
     return redirect('view_pending_post')
+
+@login_required(login_url='login')
+def adminApprovePost(request):
+    user = request.user
+    if user.role != 2:  # Ensure the user is an Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    
+    selected_post_type = request.GET.get('post_type')
+    posts = Post.objects.none()
+
+    if selected_post_type == 'lost':
+        posts = Post.objects.filter(is_visible=True, approved_by=user, post_type='lost').order_by('-created_at')
+    elif selected_post_type == 'found':
+        posts = Post.objects.filter(is_visible=True, approved_by=user, post_type='found').order_by('-created_at')
+
+    
+    context = {
+        "classActiveDashboard": "active",
+        "posts": posts,
+    }
+    return render(request, 'post/adminApprovedPost.html', context)
