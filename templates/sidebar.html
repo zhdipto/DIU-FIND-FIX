@@ -90,7 +90,7 @@
 
               {% if request.user.role == 1 or request.user.role == 2 %}
 
-              <li class="sidebar-item has-sub {{ classActiveViewAllItem}}">
+              <li class="sidebar-item has-sub {{ classActiveViewAllItem }}">
                 <a href="#" class="sidebar-link">
                   <i class="bi bi-hdd-stack-fill"></i>
                   <span>View All Items</span>
@@ -115,6 +115,13 @@
                       >Pending Post</a
                     >
                   </li>
+
+                  <li class="submenu-item {{ classActiveClaimItem }}">
+                    <a href="{% url 'claim_item_list' %}" class="submenu-link"
+                      >Returned Items</a
+                    >
+                  </li>
+
                   {% endif %}
                 </ul>
               </li>

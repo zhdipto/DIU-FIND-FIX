@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from lostfound.models import Post
+from lostfound.models import Claim, Post
 from reports.models import Report
 from .models import User
 from django.contrib.auth.decorators import login_required
@@ -561,6 +561,7 @@ def adminDashboard(request):
     approved_posts = Post.objects.filter(is_visible=True,approved_by_id=user).count()
     pending_posts = Post.objects.filter(is_visible=False).count()
     pending_reports = Report.objects.filter(is_visible=False).count()
+    claimed_items = Claim.objects.filter(verified_by_id=user.id).count()
 
     context = {
         "classActiveDashboard": "active",
@@ -574,5 +575,6 @@ def adminDashboard(request):
         'approved_posts': approved_posts,
         'pending_posts': pending_posts,
         'pending_reports': pending_reports,
+        'claimed_items': claimed_items,
     }
     return render(request, 'Admin/adminDashboard.html', context)

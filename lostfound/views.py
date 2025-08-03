@@ -201,22 +201,25 @@ def adminApprovePost(request):
 @login_required(login_url='login')
 def claimItemList(request):
     user = request.user
-    if user.role != 2:  # Ensure the user is a Admin
+    if user.role != 2:  # Only admin can access
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
-
-    post_type = request.GET.get('post_type')
-    post_id = request.GET.get('post_id')
-
-    claimed_items = Claim.objects.filter(claimed_by=user)
-
+    
+    post_type = request.GET.get('post_type')  # 'lost' or 'found'
+    post_id = request.GET.get('post_id')  # ID of the post
+    
+    claimed_items = Claim.objects.all()
+    
+    # 🔍 Filter by post_type from the Post model using relationship
     if post_type:
         claimed_items = claimed_items.filter(post__post_type=post_type)
-
+    
+    # 🔍 Filter by specific post ID
     if post_id:
-        claimed_items = claimed_items.filter(post__id=post_id)
-
+        claimed_items = claimed_items.filter(post=post_id)
+    
     context = {
+        "classActiveViewAllItem": "active",
         "classActiveClaimItem": "active",
         "claimed_items": claimed_items
     }
@@ -258,3 +261,24 @@ def claimItem(request, post_id):
         "post": post
     }
     return render(request, 'post/claimItem.html', context)
+
+@login_required(login_url='login')
+def adminVerifiedClaim(request):
+    user = request.user
+    if user.role != 2:  # Ensure the user is a Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    selected_post_type = request.GET.get('post_type')
+    claims = Claim.objects.none()
+
+    if selected_post_type == 'lost':
+        claims = Claim.objects.filter(verified_by_id=user.id, post__post_type='lost').order_by('-claimed_at')
+
+    elif selected_post_type == 'found':
+        claims = Claim.objects.filter(verified_by_id=user.id, post__post_type='found').order_by('-claimed_at')
+    
+    context = {
+        "classActiveDashboard": "active",
+        "claims": claims
+    }
+    return render(request, 'post/adminVerifiedClaim.html', context)
