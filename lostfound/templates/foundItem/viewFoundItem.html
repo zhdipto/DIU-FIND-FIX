@@ -160,18 +160,18 @@
                                     <div class="modal-primary me-1 mb-1 d-inline-block">
                                         <!-- Button trigger for primary themes modal -->
                                         <button type="button" class="btn btn-sm btn-outline-success action-btn" data-bs-toggle="modal"
-                                            data-bs-target="#primary">
+                                            data-bs-target="#myModalLabel160{{ post.id }}">
                                             Claim
                                         </button>
 
                                         <!--primary theme Modal -->
-                                        <div class="modal fade text-left" id="primary" tabindex="-1" role="dialog"
-                                            aria-labelledby="myModalLabel160" aria-hidden="true">
+                                        <div class="modal fade text-left" id="myModalLabel160{{ post.id }}" tabindex="-1" role="dialog"
+                                            aria-labelledby="myModalLabel160{{ post.id }}" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                                                 role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160">Claim Lost Item — Post ID#{{ post.id }}
+                                                        <h5 class="modal-title white" id="myModalLabel160{{ post.id }}">Claim Lost Item — Post ID#{{ post.id }}
                                                         </h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal"
                                                             aria-label="Close">
@@ -199,7 +199,59 @@
                           {% if user.role == 2 %}
                               <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
                               <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+
+                               <div class="modal-primary me-1 mb-1 d-inline-block">
+                                    <!-- Button trigger for claim item modal -->
+                                    <button type="button" class="btn icon btn-lg btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#claimItemModal{{ post.id }}">
+                                       <i class="bi bi-person"></i>
+                                    </button>
+
+                                    <!-- Claim Item Modal -->
+                                    <div class="modal fade text-left" id="claimItemModal{{ post.id }}" tabindex="-1" role="dialog"
+                                        aria-labelledby="claimItemModalLabel{{ post.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-success">
+                                                    <h5 class="modal-title white" id="claimItemModalLabel{{ post.id }}">
+                                                        Claim Lost Item — Post ID #{{ post.id }}
+                                                    </h5>
+                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                        <i data-feather="x"></i>
+                                                    </button>
+                                                </div>
+                                                {% comment %} action="{% url 'claim_item' post.id %}" {% endcomment %}
+                                                <form method="post" action="{% url 'claim_item' post.id %}">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label for="claimed_by_id" class="form-label">Student ID</label>
+                                                            <input type="text" class="form-control" name="claimed_by_id" id="claimed_by_id"
+                                                                placeholder="e.g. 192-35-1144" required>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="message" class="form-label">Message (optional)</label>
+                                                            <textarea class="form-control" name="message" id="message" rows="3"
+                                                                placeholder="Any additional remarks..."></textarea>
+                                                        </div>
+
+                                                        <p class="small text-muted mt-2">
+                                                            Admin must verify the student’s identity before confirming the claim.
+                                                        </p>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-success">Submit Claim</button>
+                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
                           {% endif %}
+                          </div>
                     </td>
                   </tr>
                   {% endfor %}

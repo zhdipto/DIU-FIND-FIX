@@ -220,8 +220,8 @@
                                                         <i data-feather="x"></i>
                                                     </button>
                                                 </div>
-                                                {% comment %} <!-- action="{% url 'claim_item' post.id %}" --> {% endcomment %}
-                                                <form method="post">
+                                                {% comment %} action="{% url 'claim_item' post.id %}" {% endcomment %}
+                                                <form method="post" action="{% url 'claim_item' post.id %}">
                                                     {% csrf_token %}
                                                     <div class="modal-body">
                                                         <div class="mb-3">

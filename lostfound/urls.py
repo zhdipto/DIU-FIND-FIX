@@ -12,4 +12,5 @@ urlpatterns = [
     path('approve-post/<int:post_id>/', views.approvePost, name='approve_post'),
     path('admin-approve-post/', views.adminApprovePost, name='admin_approve_post'),
     path('claim-item-list/', views.claimItemList, name='claim_item_list'),
+    path('claim-item/<int:post_id>/', views.claimItem, name='claim_item'),
 ]

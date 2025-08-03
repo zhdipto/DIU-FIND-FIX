@@ -232,16 +232,26 @@ def claimItem(request, post_id):
 
     if request.method == 'POST':
         message = request.POST.get('message', '')
+        entered_student_id = request.POST.get('claimed_by_id')
+
+        try:
+            # Use username or your custom student_id field
+            student_user = User.objects.get(username=entered_student_id)
+        except User.DoesNotExist:
+            messages.error(request, f"No student found with ID {entered_student_id}.")
+            return redirect('lostfound_detail', post_id=post.id)
+    
         claim = Claim.objects.create(
             post=post,
-            claimed_by=user,
+            claimed_by=student_user,
             message=message,
             claimed_at=timezone.now(),
-            verified_by=user  # Initially not verified
+            verified_by=user
         )
         claim.save()
-        messages.success(request, 'Item claimed successfully.')
-        return redirect('claim_item_list')
+        post.status = True
+        post.save()
+        return redirect('claim_item_list', post_id=post.id)
 
     context = {
         "classActiveClaimItem": "active",
