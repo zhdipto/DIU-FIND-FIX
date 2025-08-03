@@ -33,3 +33,18 @@ class Post(models.Model):
         db_table = 'posts'  # custom table name (optional)
         ordering = ['-created_at']
 
+
+class Claim(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    claimed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    claimed_at = models.DateTimeField(auto_now_add=True)
+    verified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='verified_claims')
+    message = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=False)  # True if the claim is verified, False otherwise
+
+    def __str__(self):
+        return f"Claim for {self.post.item_name} by {self.claimed_by.username}"
+    
+    class Meta:
+        db_table = 'claims'  # custom table name (optional)
+        ordering = ['-claimed_at']

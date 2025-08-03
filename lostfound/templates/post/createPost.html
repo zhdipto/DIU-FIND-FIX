@@ -100,7 +100,7 @@
                           name="studentId"
                           class="form-control"
                           placeholder="{{ student.username }}"
-                          disabled
+                          {% if user.role == 1 %}disabled{% endif %}
                         />
                       </div>
                     </div>

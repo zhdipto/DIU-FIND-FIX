@@ -2,7 +2,7 @@ from pyexpat.errors import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from .models import Post
+from .models import Claim, Post
 from users.models import User
 # Create your views here.
 
@@ -197,3 +197,54 @@ def adminApprovePost(request):
         "posts": posts,
     }
     return render(request, 'post/adminApprovedPost.html', context)
+
+@login_required(login_url='login')
+def claimItemList(request):
+    user = request.user
+    if user.role != 2:  # Ensure the user is a Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    post_type = request.GET.get('post_type')
+    post_id = request.GET.get('post_id')
+
+    claimed_items = Claim.objects.filter(claimed_by=user)
+
+    if post_type:
+        claimed_items = claimed_items.filter(post__post_type=post_type)
+
+    if post_id:
+        claimed_items = claimed_items.filter(post__id=post_id)
+
+    context = {
+        "classActiveClaimItem": "active",
+        "claimed_items": claimed_items
+    }
+    return render(request, 'post/claimItemList.html', context)
+
+@login_required(login_url='login')
+def claimItem(request, post_id):
+    user = request.user
+    if user.role != 2:  # Ensure the user is a Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        message = request.POST.get('message', '')
+        claim = Claim.objects.create(
+            post=post,
+            claimed_by=user,
+            message=message,
+            claimed_at=timezone.now(),
+            verified_by=user  # Initially not verified
+        )
+        claim.save()
+        messages.success(request, 'Item claimed successfully.')
+        return redirect('claim_item_list')
+
+    context = {
+        "classActiveClaimItem": "active",
+        "post": post
+    }
+    return render(request, 'post/claimItem.html', context)

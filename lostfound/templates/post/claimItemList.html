@@ -26,9 +26,9 @@
           <div class="page-title">
             <div class="row">
               <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>All Lost Item List</h3>
+                <h3>All Pending Post List</h3>
                 <p class="text-subtitle text-muted">
-                  Scan through Lost items to reclaim your belongings.
+                  All posts that are currently pending approval will be listed here.
                 </p>
               </div>
               <div class="col-12 col-md-6 order-md-2 order-first">
@@ -38,10 +38,10 @@
                 >
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                      <a href="{% url 'admin_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                      Lost Items
+                      Pending Posts
                     </li>
                   </ol>
                 </nav>
@@ -54,17 +54,23 @@
                 <div class="row mb-3">
                   <div class="col-md-6"></div>
                   <div class="col-md-3">
-                    <a href="{% url 'create_post' %}" class="btn btn-primary">+ Post Lost Item</a>
-                  </div>
+                    <p class="bg-primary text-white fw-bold text-center rounded-pill shadow-sm p-2">
+                        Select post type to see Claimed Item 👉
+                    </p>
+                </div>
                   <div class="col-md-3">
-                    <form method="get" id="location-filter-form">
-                        <select class="form-select" name="location" onchange="document.getElementById('location-filter-form').submit();">
-                          <option value="">All Locations</option>
-                          <option value="library" {% if request.GET.location == 'library' %}selected{% endif %}>Library</option>
-                          <option value="cafeteria" {% if request.GET.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
-                          <option value="Knowledge Tower" {% if request.GET.location == 'Knowledge Tower' %}selected{% endif %}>Knowledge Tower</option>
-                          <option value="parking" {% if request.GET.location == 'parking' %}selected{% endif %}>Parking</option>
+                    <form method="get" id="post-filter-form" class="d-flex gap-2">
+                    <!-- Post Type Filter -->
+                        <select class="form-select" name="post_type" onchange="document.getElementById('post-filter-form').submit();">
+                            <option value="">Post Type</option>
+                            <option value="lost" {% if request.GET.post_type == 'lost' %}selected{% endif %}>Lost</option>
+                            <option value="found" {% if request.GET.post_type == 'found' %}selected{% endif %}>Found</option>
                         </select>
+
+                        <!-- Post ID Filter -->
+                        <input type="text" class="form-control" name="post_id" placeholder="Search by Post ID"
+                            value="{{ request.GET.post_id }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                   </div>
                 </div>
@@ -78,15 +84,14 @@
                     <th>No</th>
                     <th>Photo</th>
                     <th>Item Name</th>
-                    <th>Location</th>
-                    <th>Description</th>
-                    <th>Date/Time Lost</th>
-                    <th>Status</th>
+                    <th>Claimed By</th>
+                    <th>Verified By</th>
+                    <th>More Info</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                {% for post in lost_posts %}
+                {% for post in posts %}
                   <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>
@@ -119,7 +124,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Lost item details Post ID#{{ post.id }}</h4>
+                                                <h4 class="modal-title" id="myModalLabel20">Item details</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -147,11 +152,19 @@
                       <small class="text-muted">{{ post.event_time }}</small>
                     </td>
                     <td>
-                      <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
+                      {% comment %} <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
                         {% if post.status %}
-                          Found
+                          Claimed
                         {% else %}
-                          Missing
+                          Unclaimed
+                        {% endif %}
+                      </span> {% endcomment %}
+
+                      <span class="badge {% if post.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {% if post.is_visible %}
+                          Approved
+                        {% else %}
+                          Pending
                         {% endif %}
                       </span>
                     </td>
@@ -159,19 +172,19 @@
                       <div class="col-12">
                                     <div class="modal-primary me-1 mb-1 d-inline-block">
                                         <!-- Button trigger for primary themes modal -->
-                                        <button type="button" class="btn btn-sm btn-outline-success action-btn" data-bs-toggle="modal"
-                                            data-bs-target="#myModalLabel160{{ post.id }}">
-                                            Report as Found
+                                        <button type="button" class="btn icon btn-lg btn-info" data-bs-toggle="modal"
+                                            data-bs-target="#primary-{{ post.id }}">
+                                            <i class="bi bi-info-circle"></i>
                                         </button>
 
                                         <!--primary theme Modal -->
-                                        <div class="modal fade text-left" id="myModalLabel160{{ post.id }}" tabindex="-1" role="dialog"
-                                            aria-labelledby="myModalLabel160{{ post.id }}" aria-hidden="true">
+                                        <div class="modal fade text-left" id="primary-{{ post.id }}" tabindex="-1" role="dialog"
+                                            aria-labelledby="myModalLabel160" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
                                                 role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160{{ post.id }}">Return Lost Item — Post ID#{{ post.id }}
+                                                        <h5 class="modal-title white" id="myModalLabel160"> Post ID#{{ post.id }}
                                                         </h5>
                                                         <button type="button" class="close" data-bs-dismiss="modal"
                                                             aria-label="Close">
@@ -180,7 +193,7 @@
                                                     </div>
                                                     <div class="modal-body">
                                                         <p>
-                                                            If you found this item, please return it to the University Control Room.
+                                                            If you lost this item, please visit the University Control Room with proper identification to recover it.
                                                         </p>
                                                         <hr />
                                                         <h6 class="text-primary mb-1">📞 Contact Control Room</h6>
@@ -195,63 +208,10 @@
                                             </div>
                                         </div>
                                     </div>
+                            <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
+                            <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                            <a href="{% url 'approve_post' post.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
 
-                              {% if user.role == 2 %}
-                              <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
-                              <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
-
-                                <div class="modal-primary me-1 mb-1 d-inline-block">
-                                    <!-- Button trigger for claim item modal -->
-                                    <button type="button" class="btn icon btn-lg btn-info" data-bs-toggle="modal"
-                                        data-bs-target="#claimItemModal{{ post.id }}">
-                                       <i class="bi bi-person"></i>
-                                    </button>
-
-                                    <!-- Claim Item Modal -->
-                                    <div class="modal fade text-left" id="claimItemModal{{ post.id }}" tabindex="-1" role="dialog"
-                                        aria-labelledby="claimItemModalLabel{{ post.id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header bg-success">
-                                                    <h5 class="modal-title white" id="claimItemModalLabel{{ post.id }}">
-                                                        Claim Lost Item — Post ID #{{ post.id }}
-                                                    </h5>
-                                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                                        <i data-feather="x"></i>
-                                                    </button>
-                                                </div>
-                                                {% comment %} <!-- action="{% url 'claim_item' post.id %}" --> {% endcomment %}
-                                                <form method="post">
-                                                    {% csrf_token %}
-                                                    <div class="modal-body">
-                                                        <div class="mb-3">
-                                                            <label for="claimed_by_id" class="form-label">Student ID</label>
-                                                            <input type="text" class="form-control" name="claimed_by_id" id="claimed_by_id"
-                                                                placeholder="e.g. 192-35-1144" required>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <label for="message" class="form-label">Message (optional)</label>
-                                                            <textarea class="form-control" name="message" id="message" rows="3"
-                                                                placeholder="Any additional remarks..."></textarea>
-                                                        </div>
-
-                                                        <p class="small text-muted mt-2">
-                                                            Admin must verify the student’s identity before confirming the claim.
-                                                        </p>
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-success">Submit Claim</button>
-                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    </div>
-                                                </form>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </div>
                     </td>
                   </tr>
                   {% endfor %}

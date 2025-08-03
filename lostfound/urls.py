@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete-post/<int:post_id>/', views.deletePost, name='delete_post'),
     path('approve-post/<int:post_id>/', views.approvePost, name='approve_post'),
     path('admin-approve-post/', views.adminApprovePost, name='admin_approve_post'),
+    path('claim-item-list/', views.claimItemList, name='claim_item_list'),
 ]
