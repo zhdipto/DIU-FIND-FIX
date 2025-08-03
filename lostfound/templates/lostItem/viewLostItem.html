@@ -154,6 +154,19 @@
                           Missing
                         {% endif %}
                       </span>
+                      {% if user.role == 2 %}
+                        {% with claim=post.claim_set.first %}
+                            {% if claim %}
+                                {% if claim.status %}
+                                    <span class="badge bg-success">Returned</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Not Available</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-danger">Not Available</span>
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
                     </td>
                     <td>
                       <div class="col-12">
@@ -188,7 +201,7 @@
                                                             <li><strong>Location:</strong> Ground Floor, Main Building</li>
                                                             <li><strong>Phone:</strong> +8801XXXXXXXXX</li>
                                                             <li><strong>Email:</strong> controlroom@diu.edu.bd</li>
-                                                            <li><strong>Hours:</strong> 9:00 AM – 5:00 PM (Sun–Thu)</li>
+                                                            <li><strong>Hours:</strong> 9:00 AM – 5:00 PM (Sat–Thu)</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -214,13 +227,12 @@
                                             <div class="modal-content">
                                                 <div class="modal-header bg-success">
                                                     <h5 class="modal-title white" id="claimItemModalLabel{{ post.id }}">
-                                                        Claim Lost Item — Post ID #{{ post.id }}
+                                                        Found Lost Item — Post ID #{{ post.id }}
                                                     </h5>
                                                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                                         <i data-feather="x"></i>
                                                     </button>
                                                 </div>
-                                                {% comment %} action="{% url 'claim_item' post.id %}" {% endcomment %}
                                                 <form method="post" action="{% url 'claim_item' post.id %}">
                                                     {% csrf_token %}
                                                     <div class="modal-body">
@@ -237,12 +249,12 @@
                                                         </div>
 
                                                         <p class="small text-muted mt-2">
-                                                            Admin must verify the student’s identity before confirming the claim.
+                                                            Admin must verify the student’s identity before confirming.
                                                         </p>
                                                     </div>
 
                                                     <div class="modal-footer">
-                                                        <button type="submit" class="btn btn-success">Submit Claim</button>
+                                                        <button type="submit" class="btn btn-success">Submit</button>
                                                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                                                     </div>
                                                 </form>

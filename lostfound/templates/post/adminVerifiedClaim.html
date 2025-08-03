@@ -157,8 +157,11 @@
                       <div>{{ claim.claimed_at|time:"g:i A" }}</div>
                     </td>
                     <td>
-                            <a href="#" class="btn icon btn-lg btn-danger" title="Reject Claim">
+                            <a href="{% url 'delete_claim' claim.id %}" class="btn icon btn-lg btn-danger" title="Reject Claim">
                                 <i class="bi bi-x"></i>
+                            </a>
+                            <a href="{% url 'approve_claim' claim.id %}" class="btn icon btn-lg btn-success" title="Approve Claim">
+                                <i class="bi bi-check"></i>
                             </a>
                     </td>
                   </tr>

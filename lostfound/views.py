@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import Claim, Post
 from users.models import User
+from django.db.models import Exists, OuterRef
 # Create your views here.
 
 @login_required(login_url='login')
@@ -31,20 +32,19 @@ def viewFoundItem(request):
 
 @login_required(login_url='login')
 def viewLostItem(request):
-    # Fetch all visible lost posts
-    selected_location = request.GET.get('location')  # Get location from query param
+    selected_location = request.GET.get('location')
 
     if selected_location:
         lost_posts = Post.objects.filter(
             post_type='lost',
             is_visible=True,
             location__iexact=selected_location
-        ).order_by('-created_at')
+        ).prefetch_related('claim_set').order_by('-created_at')
     else:
         lost_posts = Post.objects.filter(
             post_type='lost',
             is_visible=True
-        ).order_by('-created_at')
+        ).prefetch_related('claim_set').order_by('-created_at')
 
     context = {
         "classActiveViewAllItem": "active",
@@ -52,6 +52,8 @@ def viewLostItem(request):
         "lost_posts": lost_posts,
     }
     return render(request, 'lostItem/viewLostItem.html', context)
+
+
 
 @login_required(login_url='login')
 def createPost(request):
@@ -252,9 +254,10 @@ def claimItem(request, post_id):
             verified_by=user
         )
         claim.save()
-        post.status = True
+        if post.post_type == 'found':
+            post.status = True
         post.save()
-        return redirect('claim_item_list', post_id=post.id)
+        return redirect('claim_item_list')
 
     context = {
         "classActiveClaimItem": "active",
@@ -282,3 +285,29 @@ def adminVerifiedClaim(request):
         "claims": claims
     }
     return render(request, 'post/adminVerifiedClaim.html', context)
+
+@login_required(login_url='login')
+def deleteClaim(request, claim_id):
+    user = request.user
+    if user.role != 2:  # Ensure the user is a Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    claim = get_object_or_404(Claim, id=claim_id)
+    claim.delete()
+
+    return redirect('claim_item_list')
+
+@login_required(login_url='login')
+def approveClaim(request, claim_id):
+    user = request.user
+    if user.role != 2:  # Ensure the user is a Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+    claim = get_object_or_404(Claim, id=claim_id)
+    claim.post.status = True
+    claim.post.save()
+    claim.status = True
+    claim.verified_by = user
+    claim.save()
+
+    return redirect('claim_item_list')
