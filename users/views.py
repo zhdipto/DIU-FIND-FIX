@@ -279,12 +279,7 @@ def viewStudentList(request):
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
     
-    student_id = request.GET.get('student_id')
-    if student_id:
-        students = User.objects.filter(role=1, student_id=student_id).order_by('-date_joined')
-    else:
-        # If no specific student ID is provided, show all students
-        students = User.objects.filter(role=1).order_by('-date_joined')
+    students = User.objects.filter(role=1).order_by('-date_joined')
     context = {
         "classActiveStudent": "active",
         "students": students,
@@ -398,13 +393,8 @@ def viewAdminList(request):
     if user.role != 3:  # Ensure the user is a Super Admin
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
-
-    employee_id = request.GET.get('employee_id')
-    if employee_id:
-        employees = User.objects.filter(role=2, employee_id=employee_id).order_by('-date_joined')
-    else:
-        # If no specific employee ID is provided, show all employees
-        employees = User.objects.filter(role=2).order_by('-date_joined')
+    
+    employees = User.objects.filter(role=2).order_by('-date_joined')
     context = {
         "classActiveAdmin": "active",
         "admin": employees,
