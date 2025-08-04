@@ -86,21 +86,22 @@
                     <div class="col-md-6 col-12">
                       <div class="form-group">
                         {% if user.role == 1 %}
-                        <label for="studentId"
+                        <label for="username"
                           >Student ID</label
                         >
                         {% elif user.role == 2 %}
-                        <label for="employeeId"
+                        <label for="username"
                           >Employee ID</label
                         >
                         {% endif %}
                         <input
                           type="text"
-                          id="studentId"
-                          name="studentId"
+                          id="username"
+                          name="username"
                           class="form-control"
                           placeholder="{{ student.username }}"
                           {% if user.role == 1 %}disabled{% endif %}
+                          {% if user.role == 2 %}required{% endif %}
                         />
                       </div>
                     </div>

@@ -147,6 +147,15 @@
                       <small class="text-muted">{{ post.event_time }}</small>
                     </td>
                     <td>
+                      {% if post.post_type == 'lost' %}
+                        <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
+                        {% if post.status %}
+                          Found
+                        {% else %}
+                          Missing
+                        {% endif %}
+                      </span>
+                      {% else %}
                       <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
                         {% if post.status %}
                           Claimed
@@ -154,7 +163,7 @@
                           Unclaimed
                         {% endif %}
                       </span>
-
+                      {% endif %}
                       <span class="badge {% if post.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
                         {% if post.is_visible %}
                           Approved

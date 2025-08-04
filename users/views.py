@@ -88,7 +88,7 @@ def student_dashboard(request):
 
     my_posts = Post.objects.filter(user=student, is_visible=True).count()
     my_reports = Report.objects.filter(user=student, is_visible=True).count()
-    pending_posts = Post.objects.filter(is_visible=False).count()
+    pending_posts = Post.objects.filter(user=student, is_visible=False).count()
     context = {
         "student": student,
         "classActiveDashboard": "active",

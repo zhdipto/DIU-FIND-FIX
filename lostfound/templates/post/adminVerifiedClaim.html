@@ -160,9 +160,11 @@
                             <a href="{% url 'delete_claim' claim.id %}" class="btn icon btn-lg btn-danger" title="Reject Claim">
                                 <i class="bi bi-x"></i>
                             </a>
+                            {% if claim.status == False %}
                             <a href="{% url 'approve_claim' claim.id %}" class="btn icon btn-lg btn-success" title="Approve Claim">
                                 <i class="bi bi-check"></i>
                             </a>
+                            {% endif %}
                     </td>
                   </tr>
                   {% endfor %}

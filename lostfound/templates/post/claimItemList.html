@@ -52,7 +52,11 @@
             <div class="card">
               <div class="card-body">
                 <div class="row mb-3">
-                  <div class="col-md-6"></div>
+                  <div class="col-md-6">
+                    <div class="col-md-5">
+                      <input type="text" id="customSearchBox" class="form-control" placeholder="Search ...">
+                    </div>
+                  </div>
                   <div class="col-md-3">
                     <p class="bg-primary text-white fw-bold text-center rounded-pill shadow-sm p-2">
                         Select post type to see Claimed Item 👉
@@ -66,11 +70,6 @@
                             <option value="lost" {% if request.GET.post_type == 'lost' %}selected{% endif %}>Lost</option>
                             <option value="found" {% if request.GET.post_type == 'found' %}selected{% endif %}>Found</option>
                         </select>
-
-                        <!-- Post ID Filter -->
-                        <input type="text" class="form-control" name="post_id" placeholder="Search by Post ID"
-                            value="{{ request.GET.post_id }}">
-                        <button type="submit" class="btn btn-primary">Search</button>
                     </form>
                   </div>
                 </div>
@@ -84,7 +83,7 @@
                     <th>No</th>
                     <th>Photo</th>
                     <th>Item Name</th>
-                    <th>Claimed By</th>
+                    <th>Claimed By / Returned By</th>
                     <th>Verified By</th>
                     <th>More Info</th>
                     <th>Claim Date</th>
@@ -130,7 +129,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Item details</h4>
+                                                <h4 class="modal-title" id="myModalLabel20">Item details | {{claim.post.post_type}} | Post ID# {{claim.post.id}}</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -152,17 +151,19 @@
                                 </div>
                             </div>
                     </td>
-                    <td>
-                      <div>{{ claim.claimed_at|date:"F j, Y" }}</div>
-                      <div>{{ claim.claimed_at|time:"g:i A" }}</div>
+                    <td data-order="{{ claim.claimed_at|date:'Y-m-d' }} {{ claim.claimed_at|time:'H:i' }}">
+                      {{ claim.claimed_at|date:'d M Y' }}<br>
+                      <small class="text-muted">{{ claim.claimed_at|time:'h:i A' }}</small>
                     </td>
                     <td>
-                            <a href="{% url 'delete_claim' claim.id %}" class="btn icon btn-lg btn-danger" title="Reject Claim">
+                            <a href="{% url 'delete_claim' claim.id %}" class="btn icon btn-lg btn-danger" title="Delete Claim">
                                 <i class="bi bi-x"></i>
                             </a>
+                            {% if claim.status == False %}
                             <a href="{% url 'approve_claim' claim.id %}" class="btn icon btn-lg btn-success" title="Approve Claim">
                                 <i class="bi bi-check"></i>
                             </a>
+                            {% endif %}
                     </td>
                   </tr>
                   {% endfor %}
@@ -174,17 +175,25 @@
     {% include "footer.html" %}
 <script>
   $(document).ready(function () {
-    $('#table1').DataTable({
-      searching: false, // enable searching
-      "pageLength": 5,
-      "lengthChange": false, // remove "show X entries" dropdown
-      "ordering": true, // enable sorting
-      "language": {
-        "paginate": {
-          "previous": "&laquo;",
-          "next": "&raquo;"
+    const table = $('#table1').DataTable({
+      dom: 'rtp',
+      ordering: true,
+      pageLength: 5,
+      lengthChange: false,
+      language: {
+        paginate: {
+          previous: "&laquo;",
+          next: "&raquo;"
         }
-      }
+      },
+      columnDefs: [
+        { orderable: false, targets: [1, 5, 7] } // only if you want these off
+      ]
+    });
+
+    // Custom search box
+    $('#customSearchBox').on('keyup', function () {
+      table.search(this.value).draw();
     });
   });
 </script>

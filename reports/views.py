@@ -127,6 +127,7 @@ def approveReport(request, report_id):
     report = get_object_or_404(Report, id=report_id)
     report.is_visible = True
     report.approved_by = user
+    report.status = True
     report.save()
     # messages.success(request, "Report approved successfully.")
     return redirect('view_pending_report')

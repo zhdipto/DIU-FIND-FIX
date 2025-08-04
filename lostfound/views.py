@@ -9,16 +9,7 @@ from django.db.models import Exists, OuterRef
 
 @login_required(login_url='login')
 def viewFoundItem(request):
-    # This view will render the found item page
-    selected_location = request.GET.get('location')  # Get location from query param
-    if selected_location:
-        found_posts = Post.objects.filter(
-            post_type='found',
-            is_visible=True,
-            location__iexact=selected_location
-        ).order_by('-created_at')
-    else:
-        found_posts = Post.objects.filter(
+    found_posts = Post.objects.filter(
             post_type='found',
             is_visible=True
         ).order_by('-created_at')
@@ -32,16 +23,7 @@ def viewFoundItem(request):
 
 @login_required(login_url='login')
 def viewLostItem(request):
-    selected_location = request.GET.get('location')
-
-    if selected_location:
-        lost_posts = Post.objects.filter(
-            post_type='lost',
-            is_visible=True,
-            location__iexact=selected_location
-        ).prefetch_related('claim_set').order_by('-created_at')
-    else:
-        lost_posts = Post.objects.filter(
+    lost_posts = Post.objects.filter(
             post_type='lost',
             is_visible=True
         ).prefetch_related('claim_set').order_by('-created_at')
@@ -57,8 +39,8 @@ def viewLostItem(request):
 
 @login_required(login_url='login')
 def createPost(request):
+    user = request.user
     if request.method == 'POST':
-        # Extracting data from POST
         itemName = request.POST.get('itemName')
         description = request.POST.get('description')
         location = request.POST.get('location')
@@ -66,10 +48,19 @@ def createPost(request):
         event_time = request.POST.get('time')
         photo = request.FILES.get('photo')
         post_type = request.POST.get('post_type')
+        username = request.POST.get('username')
 
-        # Create a new post
-        post = Post.objects.create(
-            user=request.user,  # ForeignKey to Student
+        if user.role == 2:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                messages.error(request, 'User does not exist.')
+                return redirect('create_post')
+        else:
+            user = request.user
+
+        post = Post.objects.create(  
+            user=user,
             item_name=itemName,
             description=description,
             location=location,
@@ -77,18 +68,13 @@ def createPost(request):
             event_date=event_date,
             event_time=event_time,
             created_at=timezone.now(),
-            is_visible=False,  # Default: pending admin approval
-            post_type=post_type  # 'lost' or 'found'
+            is_visible=False,
+            post_type=post_type
         )
-
         post.save()
 
-        return redirect('create_post')  # Change this to your view post list page
+        return redirect('create_post')
 
-    # GET request: render form
-    user = request.user
-    if not user.is_authenticated:
-        return redirect('login')
     context = {
         "classActiveCreatePost": "active",
         "student": user,
@@ -102,7 +88,7 @@ def viewPendingPost(request):
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
     selected_post_type = request.GET.get('post_type')
-    posts = Post.objects.none()
+    posts = Post.objects.all().filter(is_visible=False).order_by('-created_at')
 
     if selected_post_type == 'lost':
         posts = Post.objects.filter(is_visible=False, post_type='lost').order_by('-created_at')

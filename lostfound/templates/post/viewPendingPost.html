@@ -52,7 +52,11 @@
             <div class="card">
               <div class="card-body">
                 <div class="row mb-3">
-                  <div class="col-md-6"></div>
+                  <div class="col-md-6">
+                  <div class="col-md-5">
+                    <input type="text" id="customSearchBox" class="form-control" placeholder="Search ...">
+                  </div>
+                  </div>
                   <div class="col-md-3">
                     <p class="bg-primary text-white fw-bold text-center rounded-pill shadow-sm p-2">
                         Select post type to see pending posts 👉
@@ -142,19 +146,11 @@
                                 </div>
                             </div>
                     </td>
-                    <td>
-                      <div>{{ post.event_date }}</div>
-                      <small class="text-muted">{{ post.event_time }}</small>
+                    <td data-order="{{ post.event_date|date:'Y-m-d' }} {{ post.event_time|time:'H:i' }}">
+                      {{ post.event_date|date:'d M Y' }}<br>
+                      <small class="text-muted">{{ post.event_time|time:'h:i A' }}</small>
                     </td>
                     <td>
-                      {% comment %} <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
-                        {% if post.status %}
-                          Claimed
-                        {% else %}
-                          Unclaimed
-                        {% endif %}
-                      </span> {% endcomment %}
-
                       <span class="badge {% if post.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
                         {% if post.is_visible %}
                           Approved
@@ -218,17 +214,25 @@
     {% include "footer.html" %}
 <script>
   $(document).ready(function () {
-    $('#table1').DataTable({
-      searching: false, // enable searching
-      "pageLength": 5,
-      "lengthChange": false, // remove "show X entries" dropdown
-      "ordering": true, // enable sorting
-      "language": {
-        "paginate": {
-          "previous": "&laquo;",
-          "next": "&raquo;"
+    const table = $('#table1').DataTable({
+      dom: 'rtp',
+      ordering: true,
+      pageLength: 5,
+      lengthChange: false,
+      language: {
+        paginate: {
+          previous: "&laquo;",
+          next: "&raquo;"
         }
-      }
+      },
+      columnDefs: [
+        { orderable: false, targets: [1, 4, 7] } // only if you want these off
+      ]
+    });
+
+    // Custom search box
+    $('#customSearchBox').on('keyup', function () {
+      table.search(this.value).draw();
     });
   });
 </script>
