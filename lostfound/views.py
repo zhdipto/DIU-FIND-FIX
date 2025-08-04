@@ -56,8 +56,6 @@ def createPost(request):
             except User.DoesNotExist:
                 messages.error(request, 'User does not exist.')
                 return redirect('create_post')
-        else:
-            user = request.user
 
         post = Post.objects.create(  
             user=user,
@@ -77,7 +75,7 @@ def createPost(request):
 
     context = {
         "classActiveCreatePost": "active",
-        "student": user,
+        "user": user,
     }
     return render(request, 'post/createPost.html', context)
 

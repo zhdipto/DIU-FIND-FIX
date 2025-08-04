@@ -4,19 +4,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 
 from reports.models import Report
+from users.models import User
 
 # Create your views here.
-@login_required(login_url='loginCheck')
+@login_required(login_url='login')
 def viewAllReports(request):
-    # This view will render the page to view all reports
-    selected_location = request.GET.get('location') 
-    if selected_location:
-        report = Report.objects.filter(
-            is_visible=True,
-            location__iexact=selected_location
-        ).order_by('-submitted_at')
-    else:
-        report = Report.objects.filter(
+    report = Report.objects.filter(
             is_visible=True
         ).order_by('-submitted_at')
     context = {
@@ -26,9 +19,9 @@ def viewAllReports(request):
     }
     return render(request, 'viewReport/viewAllReport.html', context)
 
-@login_required(login_url='loginCheck')
+@login_required(login_url='login')
 def submitReport(request):
-    # This view will render the page to submit a report
+    user = request.user
     if request.method == 'POST':
         catagory = request.POST.get('issueCategory')
         description = request.POST.get('description')
@@ -36,9 +29,17 @@ def submitReport(request):
         event_date = request.POST.get('issueDate')
         event_time = request.POST.get('issueTime')
         photo = request.FILES.get('photo')
+        username = request.POST.get('username')
+
+        if user.role == 2:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                messages.error(request, 'User does not exist.')
+                return redirect('create_post')
 
         report = Report.objects.create(
-            user=request.user,
+            user=user,
             category=catagory,
             description=description,
             location=location,
@@ -62,7 +63,7 @@ def submitReport(request):
     }
     return render(request, 'submitReport/createReport.html', context)
 
-@login_required(login_url='loginCheck')
+@login_required(login_url='login')
 def viewPendingReports(request):
     user = request.user
     if user.role != 2:
@@ -77,7 +78,7 @@ def viewPendingReports(request):
     }
     return render(request, 'pendingReport/viewPendingReport.html', context)
 
-@login_required(login_url='loginCheck')
+@login_required(login_url='login')
 def editReport(request, report_id):
     user = request.user
     if user.role != 2:
@@ -105,7 +106,7 @@ def editReport(request, report_id):
     }
     return render(request, 'submitReport/editReport.html', context)
 
-@login_required(login_url='loginCheck')
+@login_required(login_url='login')
 def deleteReport(request, report_id):
     user = request.user
     if user.role != 2:
@@ -117,7 +118,7 @@ def deleteReport(request, report_id):
     # messages.success(request, "Report deleted successfully.")
     return redirect('view_pending_report')
 
-@login_required(login_url='loginCheck')
+@login_required(login_url='login')
 def approveReport(request, report_id):
     user = request.user
     if user.role != 2:
@@ -130,4 +131,30 @@ def approveReport(request, report_id):
     report.status = True
     report.save()
     # messages.success(request, "Report approved successfully.")
+    return redirect('view_pending_report')
+
+@login_required(login_url='login')
+def reportStatusUpdateView(request, report_id):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to update the status of this report.")
+        return redirect('home')
+
+    report = get_object_or_404(Report, id=report_id)
+    report.status = True
+    report.save()
+    # messages.success(request, "Report status updated successfully.")
+    return redirect('view_all_reports')
+
+@login_required(login_url='login')
+def reportStatusUpdatePending(request, report_id):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to update the status of this report.")
+        return redirect('home')
+
+    report = get_object_or_404(Report, id=report_id)
+    report.status = True
+    report.save()
+    # messages.success(request, "Report status updated successfully.")
     return redirect('view_pending_report')

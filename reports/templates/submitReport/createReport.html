@@ -23,10 +23,10 @@
                 >
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                      <a href="{% if user.role == 1 %}{% url 'student_dashboard' %}{% elif user.role == 2 %}{% url 'admin_dashboard' %}{% endif %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                      Lost Items
+                      Submit Report
                     </li>
                   </ol>
                 </nav>
@@ -75,11 +75,12 @@
                         {% endif %}
                         <input
                           type="text"
-                          id="studentId"
+                          id="username"
+                          name="username"
                           class="form-control"
-                          name="studentId"
-                          placeholder="{{user.username}}"
-                          disabled
+                          placeholder="{{ user.username }}"
+                          {% if user.role == 1 %}disabled{% endif %}
+                          {% if user.role == 2 %}required{% endif %}
                         />
                         <div class="invalid-feedback"></div>
                       </div>

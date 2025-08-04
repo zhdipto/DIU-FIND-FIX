@@ -22,7 +22,7 @@
                 >
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                      <a href="{% if user.role == 1 %}{% url 'student_dashboard' %}{% elif user.role == 2 %}{% url 'admin_dashboard' %}{% endif %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                       Lost Items
@@ -37,7 +37,7 @@
               <div class="card-header">
                 <h4 class="card-title">Post Lost or Found Item</h4>
                 <p class="text-subtitle text-muted">
-                  Please fill in all fields to report a lost or found item.
+                  Please fill in all fields to post a lost or found item.
                 </p>
               </div>
               <div class="card-body">
@@ -99,7 +99,7 @@
                           id="username"
                           name="username"
                           class="form-control"
-                          placeholder="{{ student.username }}"
+                          placeholder="{{ user.username }}"
                           {% if user.role == 1 %}disabled{% endif %}
                           {% if user.role == 2 %}required{% endif %}
                         />

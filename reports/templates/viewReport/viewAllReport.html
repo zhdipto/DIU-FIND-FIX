@@ -39,7 +39,7 @@
                 >
                   <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                      <a href="{% if user.role == 1 %}{% url 'student_dashboard' %}{% elif user.role == 2 %}{% url 'admin_dashboard' %}{% endif %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
                       All Report
@@ -58,15 +58,7 @@
                     <a href="{% url 'submit_report' %}" class="btn btn-primary">+ Post Report</a>
                   </div>
                   <div class="col-md-3">
-                  <form method="get" id="location-filter-form">
-                        <select class="form-select" name="location" onchange="document.getElementById('location-filter-form').submit();">
-                          <option value="">All Locations</option>
-                          <option value="library" {% if request.GET.location == 'library' %}selected{% endif %}>Library</option>
-                          <option value="auditorium" {% if request.GET.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
-                          <option value="classroom" {% if request.GET.location == 'classroom' %}selected{% endif %}>Classroom</option>
-                          <option value="parking" {% if request.GET.location == 'parking' %}selected{% endif %}>Parking</option>
-                        </select>
-                    </form>
+                    <input type="text" id="customSearchBox" class="form-control" placeholder="Search ...">
                   </div>
                 </div>
               </div>
@@ -84,6 +76,7 @@
                     <th>Date/Time</th>
                     <th>Status</th>
                     {% if user.role == 2 %}
+                    <th>Approved By</th>
                     <th>Action</th>
                     {% endif %}
                   </tr>
@@ -148,9 +141,9 @@
                                 </div>
                             </div>
                     </td>
-                    <td>
-                      <div>{{ report.event_date }}</div>
-                      <small class="text-muted">{{ report.event_time }}</small>
+                    <td data-order="{{ report.event_date|date:'Y-m-d' }} {{ report.event_time|time:'H:i' }}">
+                      {{ report.event_date|date:'d M Y' }}<br>
+                      <small class="text-muted">{{ report.event_time|time:'h:i A' }}</small>
                     </td>
                     <td>
                       <span class="badge {% if report.status %}status-claimed{% else %}status-unclaimed{% endif %}">
@@ -163,13 +156,20 @@
                     </td>
                     {% if user.role == 2 %}
                     <td>
+                      <div class="fw-bold">{{ report.approved_by.name }}</div>
+                      <small class="text-muted">{{ report.approved_by.username }}</small>
+                    </td>
+                    <td>
                           <a href="{% url 'edit_report' report.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
                           <a href="{% url 'delete_report' report.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                          {% if report.status == False %}
+                          <a href="{% url 'report_status_update' report.id %}" class="btn icon btn-lg btn-info"><i class="bi bi-check"></i></a>
+                          {% endif %}
                     </td>
                     {% endif %}
                   </tr>
-                  </tbody>
                   {% endfor %}
+                  </tbody>
               </table>
             </div>
           </section>
@@ -178,17 +178,25 @@
 {% include "footer.html" %}
 <script>
   $(document).ready(function () {
-    $('#table1').DataTable({
-      searching: false, // enable searching
-      "pageLength": 5,
-      "lengthChange": false, // remove "show X entries" dropdown
-      "ordering": true, // enable sorting
-      "language": {
-        "paginate": {
-          "previous": "&laquo;",
-          "next": "&raquo;"
+    const table = $('#table1').DataTable({
+      dom: 'rtp',
+      ordering: true,
+      pageLength: 5,
+      lengthChange: false,
+      language: {
+        paginate: {
+          previous: "&laquo;",
+          next: "&raquo;"
         }
-      }
+      },
+      columnDefs: [
+        { orderable: false, targets: [1, 4 {% if user.role == 2 %}, 8{% endif %}] } // only if you want these off
+      ]
+    });
+
+    // Custom search box
+    $('#customSearchBox').on('keyup', function () {
+      table.search(this.value).draw();
     });
   });
 </script>
