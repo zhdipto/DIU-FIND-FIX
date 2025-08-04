@@ -1,0 +1,163 @@
+{% load static %}
+{% include "header.html" %}
+<link rel="stylesheet" href="{% static '/compiled/css/viewAllLostItem.css' %}" />
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<body>
+    <script src="{% static '/static/js/initTheme.js' %}"></script>
+    <div id="app">
+    {% include "sidebar.html" %}
+    <div id="main">
+        <header class="mb-3">
+          <a href="#" class="burger-btn d-block d-xl-none">
+            <i class="bi bi-justify fs-3"></i>
+          </a>
+        </header>
+
+        <div class="page-heading">
+          <div class="page-title">
+            <div class="row">
+              <div class="col-12 col-md-6 order-md-1 order-last">
+                <h3>My All Claimed Items</h3>
+                <p class="text-subtitle text-muted">
+                  Everything you have claimed will be listed here.
+                </p>
+              </div>
+              <div class="col-12 col-md-6 order-md-2 order-first">
+                <nav
+                  aria-label="breadcrumb"
+                  class="breadcrumb-header float-start float-lg-end"
+                >
+                  <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                      <a href="{% url 'student_dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                      My Claim
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </div>
+          <section class="section">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                  </div>
+                  <div class="col-md-3">
+                  </div>
+                  <div class="col-md-3">
+                  <input type="text" id="customSearchBox" class="form-control" placeholder="Search ...">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table table-hover mb-0 table table-striped" id="table1">
+                <thead class="table-light">
+                  <tr>
+                    <th>No</th>
+                    <th>Photo</th>
+                    <th>Item Name</th>
+                    <th>More Info</th>
+                    <th>Claim Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for claim in my_claims %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                      <img
+                        src="{{ claim.post.photo.url }}"
+                        alt="item image"
+                        class="item-image"
+                      />
+                    </td>
+                    <td>
+                      <div class="fw-bold">{{ claim.post.item_name }}</div>
+                    </td>
+                    <td>
+                      <div class="me-1 mb-1 d-inline-block">
+                                <!-- Button trigger for full size modal -->
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+                                    data-bs-target="#full-scrn-{{ claim.id }}">
+                                    See message
+                                </button>
+
+                                <!-- full size modal-->
+                                <div class="modal fade text-left w-100" id="full-scrn-{{ claim.id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="myModalLabel20" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full"
+                                        role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel20">Item details | {{claim.post.post_type}} | Post ID# {{claim.post.id}}</h4>
+                                                <button type="button" class="close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <i data-feather="x"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <!-- Large image -->
+                                                <div class="text-center mb-4">
+                                                    <img src="{{ claim.post.photo.url }}"
+                                                        alt="Item Image" class="img-fluid rounded" style="max-height: 400px;">
+                                                </div>
+                                                <!-- Description -->
+                                                  <p class="fs-5 text-muted">
+                                                    {{ claim.message }}
+                                                  </p>  
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                    <td data-order="{{ claim.claimed_at|date:'Y-m-d' }} {{ claim.claimed_at|time:'H:i' }}">
+                      {{ claim.claimed_at|date:'d M Y' }}<br>
+                      <small class="text-muted">{{ claim.claimed_at|time:'h:i A' }}</small>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+    {% include "footer.html" %}
+<script>
+  $(document).ready(function () {
+    const table = $('#table1').DataTable({
+      dom: 'rtp',
+      ordering: true,
+      pageLength: 5,
+      lengthChange: false,
+      language: {
+        paginate: {
+          previous: "&laquo;",
+          next: "&raquo;"
+        }
+      },
+      columnDefs: [
+        { orderable: false, targets: [1, 3] } // only if you want these off
+      ]
+    });
+
+    // Custom search box
+    $('#customSearchBox').on('keyup', function () {
+      table.search(this.value).draw();
+    });
+  });
+</script>

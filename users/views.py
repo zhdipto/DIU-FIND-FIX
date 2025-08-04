@@ -89,6 +89,7 @@ def student_dashboard(request):
     my_posts = Post.objects.filter(user=student, is_visible=True).count()
     my_reports = Report.objects.filter(user=student, is_visible=True).count()
     pending_posts = Post.objects.filter(user=student, is_visible=False).count()
+    my_claims = Claim.objects.filter(claimed_by=student, post__post_type='Found').count()
     context = {
         "student": student,
         "classActiveDashboard": "active",
@@ -97,6 +98,7 @@ def student_dashboard(request):
         "my_posts": my_posts,
         "my_reports": my_reports,
         "pending_posts": pending_posts,
+        "my_claims": my_claims,
     }
     return render(request, 'pages/studentDashboard.html', context)
 
@@ -567,3 +569,19 @@ def adminDashboard(request):
         'claimed_items': claimed_items,
     }
     return render(request, 'Admin/adminDashboard.html', context)
+
+@login_required(login_url='login')
+def viewMyClaims(request):
+    user = request.user
+    if user.role != 1:  # Ensure the user is an Admin
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('home')
+
+    my_claims = Claim.objects.filter(claimed_by=user, post__post_type='Found')
+
+    context = {
+        "classActiveDashboard": "active",
+        "my_claims": my_claims,
+    }
+
+    return render(request, 'student_dashboard_content/myClaim.html', context)

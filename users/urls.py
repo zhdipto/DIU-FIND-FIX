@@ -23,4 +23,5 @@ urlpatterns = [
     path('edit-admin-info/<int:employee_id>/', views.editAdminInfo, name='edit_admin_info'),
     path('delete-admin/<int:employee_id>/', views.deleteAdmin, name='delete_admin'),
     path('admin-dashboard/', views.adminDashboard, name='admin_dashboard'),
+    path('view-my-claims/', views.viewMyClaims, name='view_my_claims'),
 ]
