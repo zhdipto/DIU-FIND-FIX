@@ -185,11 +185,10 @@ def viewMyPosts(request):
     user = request.user
     
     selected_post_type = request.GET.get('post_type')
+    posts = Post.objects.all().filter(user=user).order_by('-created_at')
 
-    if selected_post_type == 'lost':
-        posts = Post.objects.filter(user=user, post_type='lost').order_by('-created_at')
-    else:
-        posts = Post.objects.filter(user=user, post_type='found').order_by('-created_at')
+    if selected_post_type in ['lost', 'found']:
+        posts = posts.filter(post_type=selected_post_type)
 
     context = {
         "classActiveDashboard": "active",
