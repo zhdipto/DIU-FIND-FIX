@@ -75,6 +75,16 @@
                 </div>
               </div>
 
+              <!-- Department name -->
+              <div class="form-group mb-4">
+                <select class="form-select" id="department" name="department" required>
+                  <option value="">Select Department</option>
+                  {% for code, name in departments %}
+                    <option value="{{ code }}">{{ name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
               <!-- Phone Number -->
               <div class="form-group position-relative has-icon-left mb-4">
                 <input

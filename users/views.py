@@ -13,6 +13,38 @@ from django.db.models.functions import TruncMonth
 def home(request):
     return render(request, 'home.html', {})
 
+# Your department list (code, name)
+DEPARTMENTS = [
+    ("CSE", "Computer Science & Engineering — CSE"),
+    ("SWE", "Software Engineering — SWE"),
+    ("MCT", "Multimedia & Creative Technology — MCT"),
+    ("CIS", "Computing & Information Systems — CIS"),
+    ("ITM", "Information Technology & Management — ITM"),
+    ("ESDM", "Environmental Science & Disaster Management — ESDM"),
+    ("PESS", "Physical Education & Sports Science — PESS"),
+    ("EEE", "Electrical & Electronic Engineering — EEE"),
+    ("TE", "Textile Engineering — TE"),
+    ("CE", "Civil Engineering — CE"),
+    ("ICE", "Information & Communication Engineering — ICE"),
+    ("ARCH", "Architecture — ARCH"),
+    ("BA", "Business Administration — BA"),
+    ("MGMT", "Management — MGMT"),
+    ("RE", "Real Estate — RE"),
+    ("THM", "Tourism & Hospitality Management — THM"),
+    ("ENTR", "Innovation & Entrepreneurship — ENTR"),
+    ("FB", "Finance & Banking — FB"),
+    ("ACC", "Accounting — ACC"),
+    ("MKT", "Marketing — MKT"),
+    ("ENG", "English — ENG"),
+    ("LAW", "Law — LAW"),
+    ("JMC", "Journalism, Media & Communication — JMC"),
+    ("PHAR", "Pharmacy — PHAR"),
+    ("PH", "Public Health — PH"),
+    ("NFE", "Nutrition & Food Engineering — NFE"),
+    ("AGS", "Agricultural Science — AGS"),
+    ("GEB", "Genetic Engineering & Biotechnology — GEB"),
+]
+
 def register(request):
     if request.method == 'POST':
         student_name = request.POST.get('fullname')
@@ -21,15 +53,16 @@ def register(request):
         phone_number = request.POST.get('phone_number')
         birth_date = request.POST.get('birthday')
         gender = request.POST.get('gender')
+        department = request.POST.get('department')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
         # Field validation
-        if not all([student_name, student_id, email, phone_number, birth_date, gender, password, confirm_password]):
+        if not all([student_name, student_id, email, phone_number, birth_date, gender, department, password, confirm_password]):
             messages.error(request, "All fields are required.")
             return redirect('register')
 
-        if not (email.endswith('@s.diu.edu.bd') or email.endswith('@diu.edu.bd')):
+        if not (email.endswith('@s.diu.edu.bd')):
             messages.error(request, 'Please use your university email address')
             return redirect('register')
 
@@ -49,6 +82,7 @@ def register(request):
             phone_number=phone_number,
             birth_date=birth_date,
             gender=gender,
+            department=department,
         )
         user.set_password(password)
         user.save()
@@ -56,7 +90,7 @@ def register(request):
         messages.success(request, "Registration successful! You can now log in.")
         return redirect('home')
 
-    return render(request, 'registration/registration.html')
+    return render(request, 'registration/registration.html', {'departments': DEPARTMENTS})
 
 def loginCheck(request):
     if request.method == 'POST':
@@ -316,6 +350,7 @@ def editStudentInfo(request, student_id):
         gender = request.POST.get('gender', '').strip()
         profile_photo = request.FILES.get('profile_photo')
         password = request.POST.get('password')
+        department = request.POST.get('department', '').strip()
         
         errors = []
         
@@ -373,6 +408,8 @@ def editStudentInfo(request, student_id):
             student.profile_photo = profile_photo
         if password:
             student.set_password(password)
+        if department:
+            student.department = department
 
         student.last_updated_by = request.user
         student.save()
@@ -380,7 +417,8 @@ def editStudentInfo(request, student_id):
         return redirect('edit_student_info', student_id=student.id)
     context = {
         "classActiveStudent": "active",
-        "student": student,
+        "user": student,
+        "departments": DEPARTMENTS,
     }
     
     return render(request, 'accounts/editProfile.html',context)
@@ -493,7 +531,7 @@ def editAdminInfo(request, employee_id):
         return redirect('edit_admin_info', employee_id=admin.id)
     context = {
         "classActiveAdmin": "active",
-        "student": admin,
+        "user": admin,
     }
     
     return render(request, 'accounts/editProfile.html',context)

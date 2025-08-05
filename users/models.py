@@ -17,6 +17,7 @@ class User(AbstractUser):
     birth_date = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+    department = models.CharField(max_length=50, blank=True)
     last_updated_by = models.ForeignKey(
         'self',
         on_delete=models.SET_NULL,

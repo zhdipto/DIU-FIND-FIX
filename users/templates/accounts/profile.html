@@ -73,15 +73,6 @@
             </div>
           </div>
         </div>
-
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-
       </div>
       
 
@@ -117,6 +108,15 @@
                        value="{{ user.email }}" 
                        required disabled />
               </div>
+
+              {% if user.role == 1 %}
+              <div class="form-group">
+                <label for="department" class="form-label">Department</label>
+                <input type="text" name="department" id="department" class="form-control" 
+                       value="{{ user.department }}" 
+                       required disabled />
+              </div>
+              {% endif %}
 
               <div class="form-group">
                 <label for="phone" class="form-label">Phone Number</label>
@@ -178,7 +178,7 @@
         photoSection.style.display = "block";
         submitSection.style.display = "block";
         profileForm.querySelectorAll("input, select").forEach(input => { 
-        if (input.name !== 'email' && input.name !== 'user_name') {
+        if (input.name !== 'email' && input.name !== 'user_name' && input.name !== 'department') {
             input.disabled = false;
           }
         });
