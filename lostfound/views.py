@@ -1,4 +1,4 @@
-from pyexpat.errors import messages
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -70,7 +70,7 @@ def createPost(request):
             post_type=post_type
         )
         post.save()
-
+        messages.success(request, 'Post created successfully and is pending approval.')
         return redirect('create_post')
 
     context = {

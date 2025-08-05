@@ -19,6 +19,14 @@
     <link rel="stylesheet" href="{% static '/compiled/css/app.css' %}" />
     <link rel="stylesheet" href="{% static '/compiled/css/app-dark.css' %}" />
     <link rel="stylesheet" href="{% static '/compiled/css/auth.css' %}" />
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <!-- jQuery (Required for Toastr) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
   </head>
 
   <body>
@@ -38,14 +46,7 @@
             </p>
 
             <form action="{% url 'login' %}" method="post">
-              {% csrf_token %} {% if messages %} {% for message in messages %}
-              <div
-                class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}{{ message.tags }}{% endif %}"
-                role="alert"
-              >
-                {{ message }}
-              </div>
-              {% endfor %} {% endif %}
+              {% csrf_token %}
               <div class="form-group position-relative has-icon-left mb-4">
                 <input
                   type="text"
@@ -107,5 +108,17 @@
         </div>
       </div>
     </div>
+    <script>
+      {% if messages %}
+        {% for message in messages %}
+          toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "timeOut": "5000",
+          };
+          toastr["{{ message.tags }}"]("{{ message|escapejs }}");
+        {% endfor %}
+      {% endif %}
+    </script>
   </body>
 </html>

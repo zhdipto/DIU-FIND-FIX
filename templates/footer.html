@@ -25,5 +25,18 @@
     <!-- Need: Apexcharts -->
     <script src="{% static '/extensions/apexcharts/apexcharts.min.js' %}"></script>
     <script src="{% static '/static/js/pages/dashboard.js' %}"></script>
+
+    <script>
+      {% if messages %}
+        {% for message in messages %}
+          toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "timeOut": "5000",
+          };
+          toastr["{{ message.tags }}"]("{{ message|escapejs }}");
+        {% endfor %}
+      {% endif %}
+    </script>
   </body>
 </html>

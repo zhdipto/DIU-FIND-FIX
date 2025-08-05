@@ -24,16 +24,21 @@ def register(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        if not email.endswith('.diu.edu.bd'):
-            messages.add_message(request, messages.ERROR, 'Please use your university email address')
+        # Field validation
+        if not all([student_name, student_id, email, phone_number, birth_date, gender, password, confirm_password]):
+            messages.error(request, "All fields are required.")
+            return redirect('register')
+
+        if not (email.endswith('@s.diu.edu.bd') or email.endswith('@diu.edu.bd')):
+            messages.error(request, 'Please use your university email address')
             return redirect('register')
 
         if User.objects.filter(student_id=student_id).exists():
-            messages.add_message(request, messages.ERROR, 'Student ID already exists')
+            messages.error(request, 'Student ID already exists')
             return redirect('register')
 
         if password != confirm_password:
-            messages.add_message(request, messages.ERROR, 'Passwords do not match')
+            messages.error(request, 'Passwords do not match')
             return redirect('register')
 
         user = User.objects.create(
@@ -48,9 +53,11 @@ def register(request):
         user.set_password(password)
         user.save()
 
+        messages.success(request, "Registration successful! You can now log in.")
         return redirect('home')
 
     return render(request, 'registration/registration.html')
+
 def loginCheck(request):
     if request.method == 'POST':
         username = request.POST.get('id')  # Can be student_id or employee_id
@@ -61,6 +68,8 @@ def loginCheck(request):
         if user is not None:
             login(request, user)
 
+            # ✅ Add success message
+            messages.success(request, f"Welcome back, {user.name}!")
             # Redirect based on role
             if user.role == 1:  # Student
                 return redirect('student_dashboard')
