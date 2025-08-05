@@ -36,7 +36,7 @@
           <section class="section">
             <div class="card">
               <div class="card-header">
-                <h4 class="card-title">Submit Issue Report</h4>
+                <h4 class="card-title">Submit Report</h4>
                 <p class="text-subtitle text-muted">
                   Please provide detailed information about the issue you're
                   experiencing
@@ -89,32 +89,15 @@
                     <!-- Location -->
                     <div class="col-md-6 col-12">
                       <div class="form-group">
-                        <label for="location"
-                          >Location <span class="text-danger">*</span></label
-                        >
-                        <select
-                          id="location"
-                          class="form-select"
-                          name="location"
-                          required
-                        >
+                        <label for="location" class="form-label">Location</label>
+                        <select name="location" id="location" class="form-control" required>
                           <option value="">Select Location</option>
-                          <option value="library">Library</option>
-                          <option value="cafeteria">Cafeteria</option>
-                          <option value="classroom-a">Classroom Block A</option>
-                          <option value="classroom-b">Classroom Block B</option>
-                          <option value="classroom-c">Classroom Block C</option>
-                          <option value="laboratory">Laboratory</option>
-                          <option value="gymnasium">Gymnasium</option>
-                          <option value="dormitory">Dormitory</option>
-                          <option value="parking">Parking Area</option>
-                          <option value="admin-office">
-                            Administrative Office
-                          </option>
-                          <option value="auditorium">Auditorium</option>
-                          <option value="other">Other</option>
+                          {% for value, label in locations %}
+                            <option value="{{ value }}">
+                              {{ label }}
+                            </option>
+                          {% endfor %}
                         </select>
-                        <div class="invalid-feedback"></div>
                       </div>
                     </div>
                   </div>

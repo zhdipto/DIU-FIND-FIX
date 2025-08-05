@@ -100,25 +100,17 @@
                     <!-- Location -->
                     <div class="col-md-6 col-12">
                       <div class="form-group">
-                        <label for="location"
-                          >Location <span class="text-danger">*</span></label
-                        >
-                        <select id="location" class="form-select" name="location">
-                            <option value="">Select Location</option>
-                            <option value="library" {% if input_data.location == 'library' or post.location == 'library' %}selected{% endif %}>Library</option>
-                            <option value="cafeteria" {% if input_data.location == 'cafeteria' or post.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
-                            <option value="Knowledge Tower" {% if input_data.location == 'Knowledge Tower' or post.location == 'Knowledge Tower' %}selected{% endif %}>Knowledge Tower</option>
-                            <option value="classroom-b" {% if input_data.location == 'classroom-b' or post.location == 'classroom-b' %}selected{% endif %}>Classroom Block B</option>
-                            <option value="classroom-c" {% if input_data.location == 'classroom-c' or post.location == 'classroom-c' %}selected{% endif %}>Classroom Block C</option>
-                            <option value="laboratory" {% if input_data.location == 'laboratory' or post.location == 'laboratory' %}selected{% endif %}>Laboratory</option>
-                            <option value="gymnasium" {% if input_data.location == 'gymnasium' or post.location == 'gymnasium' %}selected{% endif %}>Gymnasium</option>
-                            <option value="dormitory" {% if input_data.location == 'dormitory' or post.location == 'dormitory' %}selected{% endif %}>Dormitory</option>
-                            <option value="parking" {% if input_data.location == 'parking' or post.location == 'parking' %}selected{% endif %}>Parking Area</option>
-                            <option value="admin-office" {% if input_data.location == 'admin-office' or post.location == 'admin-office' %}selected{% endif %}>Administrative Office</option>
-                            <option value="auditorium" {% if input_data.location == 'auditorium' or post.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
-                            <option value="other" {% if input_data.location == 'other' or post.location == 'other' %}selected{% endif %}>Other</option>
-                            </select>
+                        <label for="location" class="form-label">Location</label>
+                        <select name="location" id="location" class="form-control" required>
+                          <option value="">Select Location</option>
+                          {% for value, label in locations %}
+                            <option value="{{ value }}" {% if input_data.location == value or post.location == value %}selected{% endif %}>
+                              {{ label }}
+                            </option>
+                          {% endfor %}
+                        </select>
                       </div>
+
                     </div>
                   </div>
 

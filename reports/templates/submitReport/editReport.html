@@ -78,7 +78,7 @@
                           id="studentId"
                           class="form-control"
                           name="studentId"
-                          placeholder="{{user.username}}"
+                          placeholder="{{report.user.username}}"
                           disabled
                         />
                         <div class="invalid-feedback"></div>
@@ -88,30 +88,17 @@
                     <!-- Location -->
                     <div class="col-md-6 col-12">
                       <div class="form-group">
-                        <label for="location"
-                          >Location <span class="text-danger">*</span></label
-                        >
-                        <select
-                          id="location"
-                          class="form-select"
-                          name="location"
-                        >
+                        <label for="location" class="form-label">Location</label>
+                        <select name="location" id="location" class="form-control" required>
                           <option value="">Select Location</option>
-                            <option value="library" {% if input_data.location == 'library' or report.location == 'library' %}selected{% endif %}>Library</option>
-                            <option value="cafeteria" {% if input_data.location == 'cafeteria' or report.location == 'cafeteria' %}selected{% endif %}>Cafeteria</option>
-                            <option value="classroom-a" {% if input_data.location == 'classroom-a' or report.location == 'classroom-a' %}selected{% endif %}>Classroom Block A</option>
-                            <option value="classroom-b" {% if input_data.location == 'classroom-b' or report.location == 'classroom-b' %}selected{% endif %}>Classroom Block B</option>
-                            <option value="classroom-c" {% if input_data.location == 'classroom-c' or report.location == 'classroom-c' %}selected{% endif %}>Classroom Block C</option>
-                            <option value="laboratory" {% if input_data.location == 'laboratory' or report.location == 'laboratory' %}selected{% endif %}>Laboratory</option>
-                            <option value="gymnasium" {% if input_data.location == 'gymnasium' or report.location == 'gymnasium' %}selected{% endif %}>Gymnasium</option>
-                            <option value="dormitory" {% if input_data.location == 'dormitory' or report.location == 'dormitory' %}selected{% endif %}>Dormitory</option>
-                            <option value="parking" {% if input_data.location == 'parking' or report.location == 'parking' %}selected{% endif %}>Parking Area</option>
-                            <option value="admin-office" {% if input_data.location == 'admin-office' or report.location == 'admin-office' %}selected{% endif %}>Administrative Office</option>
-                            <option value="auditorium" {% if input_data.location == 'auditorium' or report.location == 'auditorium' %}selected{% endif %}>Auditorium</option>
-                            <option value="other" {% if input_data.location == 'other' or post.location == 'other' %}selected{% endif %}>Other</option>
+                          {% for value, label in locations %}
+                            <option value="{{ value }}" {% if input_data.location == value or report.location == value %}selected{% endif %}>
+                              {{ label }}
+                            </option>
+                          {% endfor %}
                         </select>
-                        <div class="invalid-feedback"></div>
                       </div>
+
                     </div>
                   </div>
 
