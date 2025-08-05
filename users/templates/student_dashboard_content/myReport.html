@@ -53,6 +53,10 @@
               <div class="card-body">
                 <div class="row mb-3">
                   <div class="col-md-6"></div>
+                  <div class="col-md-3"></div>
+                  <div class="col-md-3">
+                    <input type="text" id="customSearchBox" class="form-control" placeholder="Search ...">
+                  </div>
                 </div>
               </div>
             </div>
@@ -127,9 +131,9 @@
                                 </div>
                             </div>
                     </td>
-                    <td>
-                      <div>{{ report.event_date }}</div>
-                      <small class="text-muted">{{ report.event_time }}</small>
+                    <td data-order="{{ report.event_date|date:'Y-m-d' }} {{ report.event_time|time:'H:i' }}">
+                      {{ report.event_date|date:'d M Y' }}<br>
+                      <small class="text-muted">{{ report.event_time|time:'h:i A' }}</small>
                     </td>
                     <td>
                       <span class="badge {% if report.status %}status-claimed{% else %}status-unclaimed{% endif %}">
@@ -158,17 +162,25 @@
     {% include "footer.html" %}
 <script>
   $(document).ready(function () {
-    $('#table1').DataTable({
-      searching: false, // enable searching
-      "pageLength": 5,
-      "lengthChange": false, // remove "show X entries" dropdown
-      "ordering": true, // enable sorting
-      "language": {
-        "paginate": {
-          "previous": "&laquo;",
-          "next": "&raquo;"
+    const table = $('#table1').DataTable({
+      dom: 'rtp',
+      ordering: true,
+      pageLength: 5,
+      lengthChange: false,
+      language: {
+        paginate: {
+          previous: "&laquo;",
+          next: "&raquo;"
         }
-      }
+      },
+      columnDefs: [
+        { orderable: false, targets: [1, 4] } // only if you want these off
+      ]
+    });
+
+    // Custom search box
+    $('#customSearchBox').on('keyup', function () {
+      table.search(this.value).draw();
     });
   });
 </script>
