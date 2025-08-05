@@ -212,6 +212,7 @@ def deletePost(request, post_id):
 
     post = get_object_or_404(Post, id=post_id)
     post.delete()
+    messages.success(request, 'Post deleted successfully')
     return redirect('view_pending_post')
 
 @login_required(login_url='login')
@@ -225,6 +226,7 @@ def approvePost(request, post_id):
     post.is_visible = True
     post.approved_by = user
     post.save()
+    messages.success(request, 'Post approved')
     return redirect('view_pending_post')
 
 @login_required(login_url='login')
@@ -294,12 +296,15 @@ def claimItem(request, post_id):
             claimed_at=timezone.now(),
             verified_by=user
         )
-        claim.save()
+
         if post.post_type == 'found':
             post.status = True
+            claim.status = True
+            messages.success(request, 'Item claimed successfully')
         post.save()
+        claim.save()
         return redirect('claim_item_list')
-
+    
     context = {
         "classActiveClaimItem": "active",
         "post": post
@@ -341,11 +346,13 @@ def approveClaim(request, claim_id):
     if user.role != 2:  # Ensure the user is a Admin
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('home')
+    
     claim = get_object_or_404(Claim, id=claim_id)
     claim.post.status = True
     claim.post.save()
     claim.status = True
     claim.verified_by = user
     claim.save()
+    messages.success(request, 'Item Returned successfully')
 
     return redirect('claim_item_list')
