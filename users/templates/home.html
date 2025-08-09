@@ -31,24 +31,23 @@
         overflow-x: hidden;
       }
 
-      .navbar {
+      .navbara {
         background: #6f42c1;
         border-bottom: 1px solid rgba(67, 94, 190, 0.2);
-        padding: 1rem 0;
-        position: fixed;
+        padding: 3rem 0;
         width: 100%;
         top: 0;
         z-index: 1000;
         transition: all 0.3s ease;
       }
 
-      .navbar-container {
+      .navbara-container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 2rem;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: center;
       }
 
       .hero {
@@ -385,7 +384,6 @@
       .footer {
         background: #6f42c1;
         padding: 2rem 0;
-        margin-top: 3rem;
       }
 
       .footer .container {
@@ -517,8 +515,8 @@
 
   <body>
     <script src="{% static 'compiled/js/initTheme.js' %}"></script>
-    <nav class="navbar">
-      <div class="navbar-container">
+    <nav class="navbara">
+      <div class="navbara-container">
         <div class="logo">
           <a href="{% if user.is_authenticated %}
                     {% if user.role == 1 %}
@@ -531,7 +529,7 @@
                   {% else %}
                     {% url 'home' %}
                   {% endif %}">
-              <img src="{% static 'compiled/svg/logo.svg' %}" alt="Logo" style="height: 40px; width: auto">
+              <img src="{% static 'compiled/svg/logo.svg' %}" alt="Logo" style="height: 60px; width: auto">
           </a>
 
         </div>
