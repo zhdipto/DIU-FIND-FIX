@@ -520,13 +520,20 @@
     <nav class="navbar">
       <div class="navbar-container">
         <div class="logo">
-          <a href="{% url 'home' %}">"
-            ><img
-              src="{% static 'compiled/svg/logo.svg' %}"
-              alt="Logo"
-              srcset=""
-              style="height: 40px; width: auto"
-          /></a>
+          <a href="{% if user.is_authenticated %}
+                    {% if user.role == 1 %}
+                      {% url 'student_dashboard' %}
+                    {% elif user.role == 2 %}
+                      {% url 'admin_dashboard' %}
+                    {% elif user.role == 3 %}
+                      {% url 'super_admin_dashboard' %}
+                    {% endif %}
+                  {% else %}
+                    {% url 'home' %}
+                  {% endif %}">
+              <img src="{% static 'compiled/svg/logo.svg' %}" alt="Logo" style="height: 40px; width: auto">
+          </a>
+
         </div>
       </div>
     </nav>

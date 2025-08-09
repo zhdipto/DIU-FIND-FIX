@@ -54,6 +54,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Store session in browser cookies
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
+# Session cookie age (seconds) — example: 2 weeks
+SESSION_COOKIE_AGE = 1209600  
+
+# Keep session after browser closes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+# Security settings
+SESSION_COOKIE_HTTPONLY = True  # Prevent JS from reading cookie
+SESSION_COOKIE_SECURE = False   # Set to True in HTTPS production
+
+
 ROOT_URLCONF = 'DIU_Find_fix.urls'
 
 TEMPLATES = [
