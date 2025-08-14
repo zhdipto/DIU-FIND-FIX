@@ -72,6 +72,11 @@ LOCATIONS = [
 
 @login_required(login_url='login')
 def viewAllReports(request):
+    user = request.user
+    if user.role != 2:
+        messages.error(request, "You do not have permission to view this page.")
+        return redirect('home')
+
     report = Report.objects.filter(
             is_visible=True
         ).order_by('-submitted_at')

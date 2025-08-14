@@ -149,9 +149,9 @@
                     <td>
                             <a href="{% url 'edit_report' report.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
                             <a href="{% url 'delete_report' report.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
-                            <a href="{% url 'approve_report' report.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
+                            <a href="{% url 'approve_report' report.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i>A</a>
                             {% if report.status == False %}
-                            <a href="{% url 'report_status_update_pending' report.id %}" class="btn icon btn-lg btn-info"><i class="bi bi-check"></i></a>
+                            <a href="{% url 'report_status_update_pending' report.id %}" class="btn icon btn-lg btn-info"><i class="bi bi-check"></i>S</a>
                             {% endif %}
                     </td>
                   </tr>

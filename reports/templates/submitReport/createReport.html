@@ -26,7 +26,11 @@
                       <a href="{% if user.role == 1 %}{% url 'student_dashboard' %}{% elif user.role == 2 %}{% url 'admin_dashboard' %}{% endif %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
+                    {% if user.role == 1 %}
+                      Reports
+                    {% elif user.role == 2 %}
                       Submit Report
+                    {% endif %}
                     </li>
                   </ol>
                 </nav>

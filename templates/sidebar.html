@@ -135,26 +135,34 @@
 
               </li>
 
-              <li class="sidebar-item has-sub {{ classActiveReports }}">
+              <li class="sidebar-item {% if request.user.role == 2 %}has-sub {% else %} {% endif %} {{ classActiveReports }}">
+              {% if request.user.role == 2 %}
                 <a href="#" class="sidebar-link">
                   <i class="bi bi-flag-fill"></i>
                   <span>Reports</span>
                 </a>
+              {% else %}
+              <a href="{% url 'submit_report' %}" class="sidebar-link">
+                  <i class="bi bi-flag-fill"></i>
+                  <span>Reports</span>
+              </a>
+              {% endif %}
 
                 <ul class="submenu {{ classActiveReports }}">
+                {% if request.user.role == 2 %}
                   <li class="submenu-item {{ classActiveViewAllReports }}">
                     <a href="{% url 'view_all_reports' %}" class="submenu-link"
                       >View All Reports</a
                     >
                   </li>
-
+                  
                   <li class="submenu-item {{ classActiveSubmitReport }}">
                     <a href="{% url 'submit_report' %}" class="submenu-link"
                       >Submit Report</a
                     >
                   </li>
 
-                  {% if request.user.role == 2 %}
+                  
                   <li class="submenu-item {{ classActiveViewPendingReports }}">
                     <a href="{% url 'view_pending_report' %}" class="submenu-link"
                       >Pending Report</a
