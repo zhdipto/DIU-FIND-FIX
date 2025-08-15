@@ -26,9 +26,9 @@
           <div class="page-title">
             <div class="row">
               <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>All Returned Items List</h3>
+                <h3>All Items Verified by me</h3>
                 <p class="text-subtitle text-muted">
-                  All items that are Returned are listed here.
+                  All items that are Returned by the admin are listed here.
                 </p>
               </div>
               <div class="col-12 col-md-6 order-md-2 order-first">
@@ -41,7 +41,7 @@
                       <a href="{% url 'admin_dashboard' %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                      Returned Items
+                      Verified Claim
                     </li>
                   </ol>
                 </nav>
@@ -78,7 +78,6 @@
                     <th>Photo</th>
                     <th>Item Name</th>
                     <th>Claimed By / Returned By</th>
-                    <th>Verified By</th>
                     <th>More Info</th>
                     <th>Claim Date</th>
                     <th>Actions</th>
@@ -105,10 +104,6 @@
                       <small class="text-muted">{{ claim.claimed_by.name }}</small>
                     </td>
                     <td>
-                        <div class="fw-bold">{{ claim.verified_by.username }}</div>
-                        <small class="text-muted">{{ claim.verified_by.name }}</small>
-                    </td>
-                    <td>
                       <div class="me-1 mb-1 d-inline-block">
                                 <!-- Button trigger for full size modal -->
                                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
@@ -123,7 +118,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Item details | Post ID # {{claim.post.id}}</h4>
+                                                <h4 class="modal-title" id="myModalLabel20">Item details | Post ID #{{claim.post.id}}</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -181,7 +176,7 @@
         }
       },
       columnDefs: [
-        { orderable: false, targets: [1, 5, 7] } // only if you want these off
+        { orderable: false, targets: [1, 4, 6] } // only if you want these off
       ]
     });
 

@@ -80,7 +80,6 @@
                     <th>Description</th>
                     <th>Date/Time Lost</th>
                     <th>Status</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -117,7 +116,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Item details</h4>
+                                                <h4 class="modal-title" id="myModalLabel20">{{post.post_type}} item details | Post ID #{{post.id}}</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -170,48 +169,6 @@
                         {% endif %}
                       </span>
                     </td>
-                    <td>
-                      <div class="col-12">
-                                    <div class="modal-primary me-1 mb-1 d-inline-block">
-                                        <!-- Button trigger for primary themes modal -->
-                                        <button type="button" class="btn btn-sm btn-outline-success action-btn" data-bs-toggle="modal"
-                                            data-bs-target="#primary">
-                                            Claim
-                                        </button>
-
-                                        <!--primary theme Modal -->
-                                        <div class="modal fade text-left" id="primary" tabindex="-1" role="dialog"
-                                            aria-labelledby="myModalLabel160" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160"> Post ID#{{ post.id }}
-                                                        </h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <i data-feather="x"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <p>
-                                                            If you lost this item, please visit the University Control Room with proper identification to recover it.
-                                                        </p>
-                                                        <hr />
-                                                        <h6 class="text-primary mb-1">📞 Contact Control Room</h6>
-                                                        <ul class="list-unstyled">
-                                                            <li><strong>Location:</strong> Ground Floor, Main Building</li>
-                                                            <li><strong>Phone:</strong> +8801XXXXXXXXX</li>
-                                                            <li><strong>Email:</strong> controlroom@diu.edu.bd</li>
-                                                            <li><strong>Hours:</strong> 9:00 AM – 5:00 PM (Sun–Thu)</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                    </td>
                   </tr>
                   {% endfor %}
                 </tbody>
@@ -234,7 +191,7 @@
         }
       },
       columnDefs: [
-        { orderable: false, targets: [1, 4, 7] } // only if you want these off
+        { orderable: false, targets: [1, 4] } // only if you want these off
       ]
     });
 
