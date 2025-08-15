@@ -187,7 +187,7 @@ def deleteReport(request, report_id):
 
     report = get_object_or_404(Report, id=report_id)
     report.delete()
-    # messages.success(request, "Report deleted successfully.")
+    messages.success(request, "Report deleted successfully.")
     return redirect('view_pending_report')
 
 @login_required(login_url='login')
@@ -202,31 +202,5 @@ def approveReport(request, report_id):
     report.approved_by = user
     report.status = True
     report.save()
-    # messages.success(request, "Report approved successfully.")
-    return redirect('view_pending_report')
-
-@login_required(login_url='login')
-def reportStatusUpdateView(request, report_id):
-    user = request.user
-    if user.role != 2:
-        messages.error(request, "You do not have permission to update the status of this report.")
-        return redirect('home')
-
-    report = get_object_or_404(Report, id=report_id)
-    report.status = True
-    report.save()
-    # messages.success(request, "Report status updated successfully.")
-    return redirect('view_all_reports')
-
-@login_required(login_url='login')
-def reportStatusUpdatePending(request, report_id):
-    user = request.user
-    if user.role != 2:
-        messages.error(request, "You do not have permission to update the status of this report.")
-        return redirect('home')
-
-    report = get_object_or_404(Report, id=report_id)
-    report.status = True
-    report.save()
-    # messages.success(request, "Report status updated successfully.")
+    messages.success(request, "Report Solved successfully.")
     return redirect('view_pending_report')

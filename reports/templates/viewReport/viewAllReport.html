@@ -75,10 +75,8 @@
                     <th>Description</th>
                     <th>Date/Time</th>
                     <th>Status</th>
-                    {% if user.role == 2 %}
-                    <th>Approved By</th>
+                    <th>Verified By</th>
                     <th>Action</th>
-                    {% endif %}
                   </tr>
                 </thead>
                 <tbody>
@@ -116,7 +114,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20{{report.id}}">Report details | Report ID # {{report.id}}</h4>
+                                                <h4 class="modal-title" id="myModalLabel20{{report.id}}">Report details | Report ID #{{report.id}}</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -190,7 +188,7 @@
         }
       },
       columnDefs: [
-        { orderable: false, targets: [1, 4 {% if user.role == 2 %}, 8{% endif %}] } // only if you want these off
+        { orderable: false, targets: [1, 4, 8] } // only if you want these off
       ]
     });
 

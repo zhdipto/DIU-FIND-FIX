@@ -110,7 +110,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20{{report.id}}">Report details | Report ID # {{report.id}}</h4>
+                                                <h4 class="modal-title" id="myModalLabel20{{report.id}}">Report details | Report ID #{{report.id}}</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -138,21 +138,18 @@
                       <small class="text-muted">{{ report.event_time|time:'h:i A' }}</small>
                     </td>
                     <td>
-                      <span class="badge {% if report.is_visible %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                      <span class="badge {% if report.is_visible %}bg-success{% else %}bg-danger text-white{% endif %}">
                         {% if report.is_visible %}
-                          Approved
+                          Solved
                         {% else %}
-                          Pending
+                          Unsolved
                         {% endif %}
                       </span>
                     </td>
                     <td>
                             <a href="{% url 'edit_report' report.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
                             <a href="{% url 'delete_report' report.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
-                            <a href="{% url 'approve_report' report.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i>A</a>
-                            {% if report.status == False %}
-                            <a href="{% url 'report_status_update_pending' report.id %}" class="btn icon btn-lg btn-info"><i class="bi bi-check"></i>S</a>
-                            {% endif %}
+                            <a href="{% url 'approve_report' report.id %}" class="btn icon btn-lg btn-success"><i class="bi bi-check"></i></a>
                     </td>
                   </tr>
                   {% endfor %}
