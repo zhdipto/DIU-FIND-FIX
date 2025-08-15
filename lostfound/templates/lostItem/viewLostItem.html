@@ -73,6 +73,9 @@
                     <th>Location</th>
                     <th>Description</th>
                     <th>Date/Time Lost</th>
+                    {% if user.role == 2 %}
+                    <th>Approved by</th>
+                    {% endif %}
                     <th>Status</th>
                     <th>Actions</th>
                   </tr>
@@ -111,7 +114,7 @@
                                         role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h4 class="modal-title" id="myModalLabel20">Lost item details | Post ID#{{ post.id }}</h4>
+                                                <h4 class="modal-title" id="myModalLabel20">Lost item details | Post ID #{{ post.id }}</h4>
                                                 <button type="button" class="close" data-bs-dismiss="modal"
                                                     aria-label="Close">
                                                     <i data-feather="x"></i>
@@ -138,6 +141,12 @@
                       {{ post.event_date|date:'d M Y' }}<br>
                       <small class="text-muted">{{ post.event_time|time:'h:i A' }}</small>
                     </td>
+                    {% if user.role == 2 %}
+                    <td>
+                      <div class="fw-bold">{{ post.approved_by.name }}</div>
+                      <small class="text-muted">{{ post.approved_by.username }}</small>
+                    </td>
+                    {% endif %}
                     <td>
                       <span class="badge {% if post.status %}status-claimed{% else %}status-unclaimed{% endif %}">
                         {% if post.status %}
@@ -147,18 +156,18 @@
                         {% endif %}
                       </span>
                       {% if user.role == 2 %}
-                        {% with claim=post.claim_set.first %}
-                            {% if claim %}
-                                {% if claim.status %}
-                                    <span class="badge bg-success">Returned</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Not Available</span>
-                                {% endif %}
-                            {% else %}
-                                <span class="badge bg-danger">Not Available</span>
-                            {% endif %}
-                        {% endwith %}
-                    {% endif %}
+                          {% with claim=post.claim_set.first %}
+                              {% if claim %}
+                                  {% if claim.status %}
+                                      <span class="badge bg-success">Returned</span>
+                                  {% else %}
+                                      <span class="badge bg-success">Available</span>
+                                  {% endif %}
+                              {% else %}
+                                  <span class="badge bg-danger">Not Available</span>
+                              {% endif %}
+                          {% endwith %}
+                      {% endif %}
                     </td>
                     <td>
                       <div class="col-12">
@@ -195,38 +204,6 @@
                                                             <li><strong>Phone:</strong> +8801XXXXXXXXX</li>
                                                             <li><strong>Email:</strong> controlroom@diu.edu.bd</li>
                                                             <li><strong>Hours:</strong> 9:00 AM – 5:00 PM (Sat–Thu)</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% else %}
-                                  <div class="modal-primary me-1 mb-1 d-inline-block">
-                                        <!-- Button trigger for primary themes modal -->
-                                        <button type="button" class="btn btn-sm btn-outline-success action-btn" data-bs-toggle="modal"
-                                            data-bs-target="#myModalLabel160{{ post.id }}">
-                                            Approved by
-                                        </button>
-
-                                        <!--primary theme Modal -->
-                                        <div class="modal fade text-left" id="myModalLabel160{{ post.id }}" tabindex="-1" role="dialog"
-                                            aria-labelledby="myModalLabel160{{ post.id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
-                                                role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header bg-primary">
-                                                        <h5 class="modal-title white" id="myModalLabel160{{ post.id }}">Lost Item — Post ID#{{ post.id }}
-                                                        </h5>
-                                                        <button type="button" class="close" data-bs-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <i data-feather="x"></i>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <ul class="list-unstyled">
-                                                            <li><strong>{{ post.approved_by.name }}</strong> </li>
-                                                            <li><strong>Employee ID:</strong> {{ post.approved_by.username }}</li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -313,7 +290,7 @@
         }
       },
       columnDefs: [
-        { orderable: false, targets: [1, 4, 7] } // only if you want these off
+        { orderable: false, targets: [1, 4, {% if user.role == 2 %}, 8 {% else %}, 7 {% endif %}] } // only if you want these off
       ]
     });
 
