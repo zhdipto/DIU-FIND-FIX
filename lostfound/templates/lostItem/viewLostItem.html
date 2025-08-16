@@ -214,7 +214,7 @@
 
                               {% if user.role == 2 %}
                               <a href="{% url 'edit_post' post.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
-                              <a href="{% url 'delete_post' post.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                              <a href="{% url 'delete_post' post.id %}?next={{ request.path }}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
 
                                 <div class="modal-primary me-1 mb-1 d-inline-block">
                                     <!-- Button trigger for claim item modal -->

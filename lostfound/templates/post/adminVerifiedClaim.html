@@ -145,7 +145,7 @@
                       <small class="text-muted">{{ claim.claimed_at|time:'h:i A' }}</small>
                     </td>
                     <td>
-                            <a href="{% url 'delete_claim' claim.id %}" class="btn icon btn-lg btn-danger" title="Reject Claim">
+                            <a href="{% url 'delete_claim' claim.id %}?next={{ request.path }}" class="btn icon btn-lg btn-danger" title="Reject Claim">
                                 <i class="bi bi-x"></i>
                             </a>
                             {% if claim.status == False %}

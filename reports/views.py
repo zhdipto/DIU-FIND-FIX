@@ -188,6 +188,9 @@ def deleteReport(request, report_id):
     report = get_object_or_404(Report, id=report_id)
     report.delete()
     messages.success(request, "Report deleted successfully.")
+    next_url = request.GET.get('next')
+    if next_url:
+        return redirect(next_url)
     return redirect('view_pending_report')
 
 @login_required(login_url='login')

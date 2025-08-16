@@ -159,7 +159,7 @@
                     </td>
                     <td>
                           <a href="{% url 'edit_report' report.id %}" class="btn icon btn-lg btn-warning"><i class="bi bi-pencil"></i></a>
-                          <a href="{% url 'delete_report' report.id %}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
+                          <a href="{% url 'delete_report' report.id %}?next={{ request.path }}" class="btn icon btn-lg btn-danger"><i class="bi bi-x"></i></a>
                           {% if report.status == False %}
                           <a href="{% url 'report_status_update' report.id %}" class="btn icon btn-lg btn-info"><i class="bi bi-check"></i></a>
                           {% endif %}

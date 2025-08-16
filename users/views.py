@@ -102,15 +102,13 @@ def loginCheck(request):
         if user is not None:
             login(request, user)
 
-            # ✅ Add success message
             messages.success(request, f"Welcome back, {user.name}!")
-            # Redirect based on role
-            if user.role == 1:  # Student
+            if user.role == 1:  #
                 return redirect('student_dashboard')
-            elif user.role == 2:  # Admin
-                return redirect('admin_dashboard')  # You must define this URL/view
-            elif user.role == 3:  # Super Admin
-                return redirect('super_admin_dashboard')  # You must define this URL/view
+            elif user.role == 2:  
+                return redirect('admin_dashboard')
+            elif user.role == 3:  
+                return redirect('super_admin_dashboard') 
             else:
                 messages.error(request, 'Role not recognized')
                 return redirect('login')
@@ -173,14 +171,11 @@ def profile_edit(request):
         if phone_number:
             if not phone_number.isdigit():
                 errors.append("Phone number must contain only digits.")
-            elif len(phone_number) < 10:
-                errors.append("Phone number must be at least 10 digits.")
+            elif len(phone_number) == 11:
+                errors.append("Phone number must contain 11 digits.")
 
         if gender and gender not in ['Male', 'Female']:
             errors.append("Invalid gender selected.")
-
-        if password and len(password) < 8:
-            errors.append("Password must be at least 8 characters long.")
 
         if errors:
             for error in errors:
