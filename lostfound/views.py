@@ -214,9 +214,7 @@ def deletePost(request, post_id):
     post.delete()
     messages.success(request, 'Post deleted successfully')
     next_url = request.GET.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('view_pending_post')
+    return redirect(next_url)
 
 @login_required(login_url='login')
 def approvePost(request, post_id):
@@ -341,9 +339,7 @@ def deleteClaim(request, claim_id):
     claim = get_object_or_404(Claim, id=claim_id)
     claim.delete()
     next_url = request.GET.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('claim_item_list')
+    return redirect(next_url)
 
 @login_required(login_url='login')
 def approveClaim(request, claim_id):

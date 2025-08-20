@@ -189,9 +189,7 @@ def deleteReport(request, report_id):
     report.delete()
     messages.success(request, "Report deleted successfully.")
     next_url = request.GET.get('next')
-    if next_url:
-        return redirect(next_url)
-    return redirect('view_pending_report')
+    return redirect(next_url)
 
 @login_required(login_url='login')
 def approveReport(request, report_id):
