@@ -94,7 +94,7 @@ def register(request):
 
 def loginCheck(request):
     if request.method == 'POST':
-        username = request.POST.get('id')  # Can be student_id or employee_id
+        username = request.POST.get('id') 
         password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
@@ -171,7 +171,7 @@ def profile_edit(request):
         if phone_number:
             if not phone_number.isdigit():
                 errors.append("Phone number must contain only digits.")
-            elif len(phone_number) == 11:
+            elif len(phone_number) != 11:
                 errors.append("Phone number must contain 11 digits.")
 
         if gender and gender not in ['Male', 'Female']:
@@ -180,15 +180,7 @@ def profile_edit(request):
         if errors:
             for error in errors:
                 messages.error(request, error)
-            return render(request, 'accounts/profile.html', {
-                'user': user,
-                'input_data': {
-                    'user_name': user_name,
-                    'phone_number': phone_number,
-                    'birth_date': birth_date,
-                    'gender': gender,
-                }
-            })
+            return render(request, 'accounts/profile.html', {})
 
         # Update user fields
         if user_name:
@@ -208,7 +200,6 @@ def profile_edit(request):
         user.save()
         messages.success(request, 'Profile updated successfully')
 
-        # Important: if password changed, re-authenticate is needed (optional)
         return redirect('view_profile')
 
     return render(request, 'accounts/profile.html', {
@@ -356,8 +347,8 @@ def editStudentInfo(request, student_id):
         if phone_number:
             if not phone_number.isdigit():
                 errors.append("Phone number must contain only digits.")
-            elif len(phone_number) < 10:
-                errors.append("Phone number must be at least 10 digits.")
+            elif len(phone_number) != 11:
+                errors.append("Phone number must be 11 digits.")
         
         if gender and gender not in ['Male', 'Female']:
             errors.append("Invalid gender selected.")
@@ -373,17 +364,7 @@ def editStudentInfo(request, student_id):
         if errors:
             for error in errors:
                 messages.error(request, error)
-            return render(request, 'accounts/editProfile.html', {
-                'student': student,
-                'input_data': {
-                    'name': name,
-                    'email': email,
-                    'student_id': student_id_input,
-                    'birth_date': birth_date,
-                    'phone_number': phone_number,
-                    'gender': gender,
-                }
-            })
+            return render(request, 'accounts/editProfile.html', {'student': student})
         
         # Update student fields
         if name:
@@ -473,8 +454,8 @@ def editAdminInfo(request, employee_id):
         if phone_number:
             if not phone_number.isdigit():
                 errors.append("Phone number must contain only digits.")
-            elif len(phone_number) < 10:
-                errors.append("Phone number must be at least 10 digits.")
+            elif len(phone_number) != 11:
+                errors.append("Phone number must be 11 digits.")
         
         if gender and gender not in ['Male', 'Female']:
             errors.append("Invalid gender selected.")
@@ -491,16 +472,7 @@ def editAdminInfo(request, employee_id):
             for error in errors:
                 messages.error(request, error)
             return render(request, 'accounts/editProfile.html', {
-                'admin': admin,
-                'input_data': {
-                    'name': name,
-                    'email': email,
-                    'employee_id': employee_id_input,
-                    'birth_date': birth_date,
-                    'phone_number': phone_number,
-                    'gender': gender,
-                }
-            })
+                'admin': admin})
         
         # Update student fields
         if name:
@@ -586,7 +558,7 @@ def adminDashboard(request):
     report_month_data = []
 
     for month_data in monthly_report_counts:
-        month_name = month_data['month'].strftime('%B')  # e.g., "January"
+        month_name = month_data['month'].strftime('%B')  
         report_month_labels.append(month_name)
         report_month_data.append(month_data['count'])  
 
